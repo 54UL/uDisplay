@@ -1,5 +1,3 @@
 # SSD1306_OLED_LIB
-implementation of ssd1306 oled driver for at89s52(8051) and pic, using hardware and software comunication protocols and low memory usage for small devices such pic 14 or 12
-
-
-
+## What is this?
+This is an implementation of an SSD1306 OLED driver for Intel 8051 (specifically AT89S52) and PIC, this library uses hardware and software communication protocols and has low memory footprint, perfect for usage on microcontrollers such as MCU from PIC 12 and PIC14 family
