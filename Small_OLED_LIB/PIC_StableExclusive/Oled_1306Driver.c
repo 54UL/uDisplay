@@ -25,7 +25,7 @@ void OLED_send(uint8_t Data,bool IsCommand)
 
 void OLED_Initialize()
 {
-   I2C_Master_Init(400000);
+   I2C_Master_Init();
    I2C_Master_Stop();
    __delay_ms(100);
    //Start Sending the comands
@@ -139,3 +139,26 @@ void OLED_DrawSprite(uint8_t x,uint8_t y, const uint8_t *sprite,
      }
      OLED_ResetCoords();
 }
+
+
+//new code
+bool OLED_InitializeRasterizer(){}
+void OLED_UpdateRenderer(){}
+bool OLED_PushRendererQueue(){}
+bool OLED_PopRendererQueue(){}
+void OLED_putpixel(){}
+void OLED_DrawCircle(){}
+void OLED_DrawRect(){}
+
+//3D gemoetric asembly and rendering
+
+
+void OLED3D_IdentityMatrix(){}
+
+void OLED3d_Clean(){}
+void OLED32_CleanColor(){
+}
+
+
+void OLED3D_DrawVertices(){}
+

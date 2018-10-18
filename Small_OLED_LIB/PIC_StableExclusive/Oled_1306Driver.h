@@ -5,9 +5,10 @@
 #ifndef OLED_DRIVER
 #define	OLED_DRIVER
 //includes
-#include <xc.h>
+
 #include <stdbool.h>
 #include <stdint.h>
+
 
 //Default FONT
 const uint8_t DefaultFont[] = {
@@ -119,9 +120,39 @@ void OLED_DrawSprite(uint8_t x,uint8_t y, const uint8_t *sprite,
         uint8_t w,uint8_t h,uint8_t Clean);
 void OLED_cls();
 void OLED_ResetCoords();
+
+//Funciones a implementar
+
+
+//Geometric operations
+
+
+//Rasterizer level
+bool OLED_InitializeRasterizer();
+void OLED_UpdateRenderer();
+bool OLED_PushRendererQueue();
+bool OLED_PopRendererQueue();
+void OLED_putpixel();
+void OLED_DrawCircle();
+void OLED_DrawRect();
+
+//3D gemoetric asembly and rendering
+
+
+void OLED3D_IdentityMatrix();
+
+void OLED3d_Clean();
+void OLED32_CleanColor();
+
+
+void OLED3D_DrawVertices();
+
+
+
+
 //variables
 const uint8_t OledAddr=0x3C;//i2c oled addres
-#define _XTAL_FREQ 4000000
+#define _XTAL_FREQ 12000000
 #endif	
 
 //comand table
