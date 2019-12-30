@@ -1,7 +1,3 @@
-//made by saul xd
-
-
-
 #ifndef OLED_DRIVER
 #define	OLED_DRIVER
 //includes
@@ -126,7 +122,6 @@ void OLED_ResetCoords();
 
 //Geometric operations
 
-
 //Rasterizer level
 bool OLED_InitializeRasterizer();
 void OLED_UpdateRenderer();
@@ -135,20 +130,12 @@ bool OLED_PopRendererQueue();
 void OLED_putpixel();
 void OLED_DrawCircle();
 void OLED_DrawRect();
-
 //3D gemoetric asembly and rendering
 
-
 void OLED3D_IdentityMatrix();
-
 void OLED3d_Clean();
 void OLED32_CleanColor();
-
-
 void OLED3D_DrawVertices();
-
-
-
 
 //variables
 const uint8_t OledAddr=0x3C;//i2c oled addres
