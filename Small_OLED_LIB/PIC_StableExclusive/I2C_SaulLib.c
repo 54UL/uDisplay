@@ -23,10 +23,7 @@
 #define BAUD_RATE OLED_BAUDRATE
 #endif
 
-
 #define CALIBRATION_FORMULA(freq,speed) (freq/(4*speed))-1
-
-
 
 //I2C LIB
 void I2C_Master_Init()
@@ -34,25 +31,28 @@ void I2C_Master_Init()
   SSPCON = 0b00101000;            //SSP Module as Master
   SSPCON2 = 0;
   SSPADD = CALIBRATION_FORMULA(12000000,400000); //Setting Clock Speed para 12 mhz //full speed for 12 mhz clock
-  
   SSPSTAT = 0;
-  TRISC3 = 1;                   //Setting as input as given in datasheet
+  TRISC3 = 1;                     //Setting as input as given in datasheet
   TRISC4 = 1;    
 }
+
 void I2C_Master_Wait()
 {
- while ((SSPSTAT & 0x04) || (SSPCON2 & 0x1F)); //Transmit is in progress
+  while ((SSPSTAT & 0x04) || (SSPCON2 & 0x1F)); //Transmit is in progress
 }
+
 void I2C_Master_Start()
 {
   I2C_Master_Wait();    
   SEN = 1;             //Initiate start condition
 }
+
 void I2C_Master_RepeatedStart()
 {
-     I2C_Master_Wait();
-      RSEN = 1;           //Initiate repeated start condition
+  I2C_Master_Wait();
+  RSEN = 1;           //Initiate repeated start condition
 }
+
 void I2C_Master_Stop()
 {
   I2C_Master_Wait();
@@ -63,5 +63,4 @@ void I2C_Master_Write(unsigned d)
 {
   I2C_Master_Wait();
   SSPBUF = d;         //Write data to SSPBUF
-  
 }
