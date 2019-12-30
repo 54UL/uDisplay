@@ -13,4 +13,4 @@ any contribiutions are well acepeted.
 
 
 ## AUTORS
-adafruit: i took the comand table from the arduiono library from their ssd1306 implementation.
+adafruit: i took the comand table from the arduino library from their ssd1306 implementation.
