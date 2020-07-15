@@ -17,10 +17,10 @@
 #pragma config CPD = OFF   // Data EEPROM Memory Code Protection bit (Data EEPROM code protection off)
 #pragma config WRT = OFF   // Flash Program Memory Write Enable bits (Write protection off; all program memory may be written to by EECON control)
 #pragma config CP = OFF    // Flash Program Memory Code Protection bit (Code protection off)
+#define OLED_LOAD_DEFAULT_FONT
 
 #include <xc.h>
-
-#define OLED_LOAD_DEFAULT_FONT
+#include <pic16f877a.h>
 #include <uOledLib.h>
 
 typedef struct
@@ -74,16 +74,21 @@ void Credits()
 
 char GetButtonPressed()
 {
-    switch (PORTBbits)
+    static uint8_t turn; // 0=P1 turn,1=P2 turn
+    turn = !turn;
+    if (turn)
     {
-    case PORTBbits_t.RB0:
-        return '1';
-    case PORTBbits_t.RB1:
-        return '2';
-    case PORTBbits_t.RB2:
-        return '3';
-    case PORTBbits_t.RB3:
-        return '4';
+        if (PORTBbits.RB0)
+            return '0';
+        if (PORTBbits.RB1)
+            return '1';
+    }
+    else
+    {
+        if (PORTBbits.RB0)
+            return '2';
+        if (PORTBbits.RB1)
+            return '3';
     }
 }
 
@@ -92,13 +97,13 @@ void MenuLogic()
 {
     //trabamos la ejecucion
     char key = GetButtonPressed();
-    if (key == '1' && EleccionMenu > 1)
+    if (key == '2' && EleccionMenu > 1)
     {
         uOLED_CleanChar(15, EleccionMenu);
         EleccionMenu--;
         DrawableArrow(15, EleccionMenu);
     }
-    else if (key == '2' && EleccionMenu < 3)
+    else if (key == '1' && EleccionMenu < 3)
     {
         uOLED_CleanChar(15, EleccionMenu);
         EleccionMenu++;
@@ -192,10 +197,10 @@ void main(void)
             case 1: //one player
                 uOLED_ResetCoords();
                 uOLED_DrawString("not implemented");
-                while (1)
-                    ;
+                while (1);
                 break;
             case 2:
+                uOLED_ClearDisplay();
                 DrawScores();
                 while (1) //solamente para que no repita toda la iteracion anterior
                 {
@@ -238,11 +243,11 @@ void main(void)
                 }
                 break;
             case 3: //credits
+                uOLED_ClearDisplay();
                 Credits();
                 break;
             }
         }
     }
-    while (1)
-        ;
+    while (1);
 }
