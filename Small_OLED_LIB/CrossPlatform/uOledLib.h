@@ -402,6 +402,18 @@ void uOLED_Putchar(char c)
         uOLED_Send(DefaultFont[charFontStart + gylphIndex], 0);
     }
 }
+
+void uOLED_CleanChar(uint8_t x, uint8_t y)
+{
+    uOLED_gotoxy(y, x);
+    //en vez de usar putchar, son 6 por que los caracteres son 6 de largo
+    uint8_t i=0;
+    for(; i < 6 ; i++)
+    uOLED_Send(0x00, 0);
+    uOLED_ResetCoords();
+}
+
+
 uint8_t index;
 
 void uOLED_DrawString(const char *string)
@@ -413,6 +425,7 @@ void uOLED_DrawString(const char *string)
         index++;
     }
 }
+
 unsigned int spriteIndex;
 
 void uOLED_DrawSprite(uint8_t x, uint8_t y, const uint8_t *sprite, unsigned int spriteLenght, uint8_t w, uint8_t h, uint8_t Clean)
