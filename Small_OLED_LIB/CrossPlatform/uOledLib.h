@@ -1,6 +1,6 @@
 #ifndef UOLEDLIB_H
 #define UOLEDLIB_H
-
+#define __C51__
 /*
 BSD 2-Clause License
 
@@ -214,7 +214,7 @@ void Timing_BlockingDelay_ms(uint16_t ms)
 {
 #if defined(__XC8) && !defined(USE_SOFTWARE_IMPLEMENTATION)
     __delay_ms(ms);
-#elif (__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif defined(__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     //imaginando que funciona igual que los retrasos en asm
     //cada repeticion son 2 micro segundos, tiempo deseado * ninstrucciones
     uint16_t AuxCounter1;
@@ -235,7 +235,7 @@ void I2C_MasterInit()
     SSPSTAT = 0;
     TRISC3 = 1; //Setting as input as given in datasheet
     TRISC4 = 1;
-#elif (__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif defined(__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     // SOFTWARE IMPLEMENTATION
     SCL_PIN = 1;
     SDA_PIN = 1;
@@ -246,7 +246,7 @@ void I2C_MasterWait()
 {
 #if defined(__XC8) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     while ((SSPSTAT & 0x04) || (SSPCON2 & 0x1F));
-#elif __C51__ || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif defined(__C51__ ) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     SCL_PIN = 1;
     Timing_BlockingDelay_ms(1);
     while (!SCL_PIN);
@@ -258,7 +258,7 @@ void I2C_MasterStart()
 #if defined(__XC8) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     I2C_MasterWait();
     SEN = 1; //Initiate start condition
-#elif (__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif defined(__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     // SOFTWARE IMPLEMENTATION
     SCL_PIN = 1;
     SDA_PIN = 1;
@@ -272,7 +272,7 @@ void I2C_MasterRepeatedStart()
 #if defined(__XC8) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     I2C_MasterWait();
     RSEN = 1;
-#elif (__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif defined(__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     //not implemented
 #endif
 }
@@ -282,7 +282,7 @@ void I2C_MasterStop()
 #if defined(__XC8) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     I2C_MasterWait();
     PEN = 1;
-#elif (__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif defined(__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     SCL_PIN = 0;
     SDA_PIN = 0;
     SCL_PIN = 1;
@@ -295,12 +295,13 @@ uint8_t shiftedvalue;
 uint8_t timeout;
 uint8_t BUS_READY;
 
-void I2C_MasterWrite(unsigned d)
+void I2C_MasterWrite(uint8_t d)
 {
 #if defined(__XC8) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     I2C_MasterWait();
     SSPBUF = d;
-#elif (__C51__) && defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif defined(__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
+
     timeout = 0;
     for (serial_buff_oled = 0; serial_buff_oled < 8; serial_buff_oled++)
     {
@@ -325,7 +326,7 @@ void I2C_MasterWrite(unsigned d)
     }
     if (SDA_PIN)
     {
-        Master_Stop(); //not ack
+        I2C_MasterStop(); //not ack
     }
 #endif
 }
