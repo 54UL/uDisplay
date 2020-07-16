@@ -4,7 +4,7 @@
 /*
 BSD 2-Clause License
 
-Copyright (c) 2018, Saul Aceves Montes
+Copyright (c) 2018, Saul Aceves
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -32,6 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 OLED_LOAD_DEFAULT_FONT : LOADS THE DEFAULT FONT GYLPHS IN PROGRAM MEMORY
 USE_I2C_SOFTWARE_IMPLEMENTATION
 USE_SOFTWARE_TIMING: ENABLES THE USE OF SOFTWARE DELAY BY PROVIDING EXTRA INFO ABOUT THE INSTRUCTION CYCLE TIMES
+SDA_PIN : const int of the bit of sda 
+SCL_PIN: const int of the bit of sda
 */
 
 /*
@@ -56,15 +58,16 @@ TODOS:
 #define I2C_PIC_HARDWARE_SPEED() (XTAL_HERTZ / (4 * I2C_BAUD_RATE)) - 1
 
 //ANSI C INCLUDES
-#include <stdint.h>
 
 //SPECIFIC SYMBOLS FOR XC8, C51 AND SDDC
 #if defined (__XC8)
 #include <xc.h>
+#include <stdint.h>
 #define _XTAL_FREQ 4000000 // this define is for pic timing
 #define MEMORY_KEYWORD
 #elif defined(__C51__) // 8052 microcontroller
-#include <8052.h>
+#define uint8_t unsigned char
+#define uint16_t unsigned short int
 #define MEMORY_KEYWORD code
 #endif
 
@@ -102,7 +105,7 @@ TODOS:
 #define SSD1306_SET_VCOM_DESELECT 0xDB
 
 #if defined(OLED_LOAD_DEFAULT_FONT)
- const static uint8_t MEMORY_KEYWORD DefaultFont[] = {
+ const  uint8_t MEMORY_KEYWORD DefaultFont[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // sp
     0x00, 0x00, 0x00, 0x2f, 0x00, 0x00, // !
     0x00, 0x00, 0x07, 0x00, 0x07, 0x00, // "
@@ -200,36 +203,27 @@ TODOS:
     0x00, 0x00, 0x06, 0x09, 0x09, 0x06  // ~
 };
 #else
- uint8_t *DefaultFont;
+ static uint8_t * DefaultFont;
 #endif
 
 //LIB GLOBAL VARS
 static uint8_t OledAddr = 0x3C;
 //I2C PORT BITS
-static uint8_t SDA_PIN = 0x00;
-static uint8_t SCL_PIN = 0X00;
 
-void Timing_BlockingDelay_ms(const uint16_t ms)
+void Timing_BlockingDelay_ms(uint16_t ms)
 {
 #if defined(__XC8) && !defined(USE_SOFTWARE_IMPLEMENTATION)
     __delay_ms(ms);
-#elif (__C51__) || (USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif (__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     //imaginando que funciona igual que los retrasos en asm
     //cada repeticion son 2 micro segundos, tiempo deseado * ninstrucciones
     uint16_t AuxCounter1;
     uint16_t AuxCounter2;
     for (AuxCounter2 = 0; AuxCounter2 < ms; AuxCounter2++)
     {
-        for (AuxCounter1 = 0; AuxCounter1 < 500; AuxCounter1++)
-            ; //UNICAMENTE PARA 12 MHZ DE CRISTAL 1 ms 500 *2 u
+        for (AuxCounter1 = 0; AuxCounter1 < 500; AuxCounter1++); //UNICAMENTE PARA 12 MHZ DE CRISTAL 1 ms 500 *2 u
     }
 #endif
-}
-
-void I2C_SetPins(uint8_t sdaPin, uint8_t sclPin)
-{
-    SDA_PIN = sdaPin;
-    SCL_PIN = sclPin;
 }
 
 void I2C_MasterInit()
@@ -241,7 +235,7 @@ void I2C_MasterInit()
     SSPSTAT = 0;
     TRISC3 = 1; //Setting as input as given in datasheet
     TRISC4 = 1;
-#elif (__C51__) || (USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif (__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     // SOFTWARE IMPLEMENTATION
     SCL_PIN = 1;
     SDA_PIN = 1;
@@ -252,9 +246,9 @@ void I2C_MasterWait()
 {
 #if defined(__XC8) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     while ((SSPSTAT & 0x04) || (SSPCON2 & 0x1F));
-#elif (__C51__) || (USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif __C51__ || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     SCL_PIN = 1;
-    Timing::BlockingDelay_ms(1);
+    Timing_BlockingDelay_ms(1);
     while (!SCL_PIN);
 #endif
 }
@@ -264,11 +258,11 @@ void I2C_MasterStart()
 #if defined(__XC8) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     I2C_MasterWait();
     SEN = 1; //Initiate start condition
-#elif (__C51__) || (USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif (__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     // SOFTWARE IMPLEMENTATION
     SCL_PIN = 1;
     SDA_PIN = 1;
-    Timing::BlockingDelay_ms(1);
+   Timing_BlockingDelay_ms(1);
     SDA_PIN = 0;
 #endif
 }
@@ -278,7 +272,7 @@ void I2C_MasterRepeatedStart()
 #if defined(__XC8) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     I2C_MasterWait();
     RSEN = 1;
-#elif (__C51__) || (USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif (__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     //not implemented
 #endif
 }
@@ -288,7 +282,7 @@ void I2C_MasterStop()
 #if defined(__XC8) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     I2C_MasterWait();
     PEN = 1;
-#elif (__C51__) || (USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif (__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     SCL_PIN = 0;
     SDA_PIN = 0;
     SCL_PIN = 1;
@@ -306,7 +300,7 @@ void I2C_MasterWrite(unsigned d)
 #if defined(__XC8) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     I2C_MasterWait();
     SSPBUF = d;
-#elif (__C51__) && (USE_I2C_SOFTWARE_IMPLEMENTATION)
+#elif (__C51__) && defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     timeout = 0;
     for (serial_buff_oled = 0; serial_buff_oled < 8; serial_buff_oled++)
     {
@@ -430,10 +424,10 @@ void uOLED_Putchar(char c)
 
 void uOLED_CleanChar(uint8_t x, uint8_t y)
 {
+	  uint8_t index;
     uOLED_gotoxy(y, x);
     //en vez de usar putchar, son 6 por que los caracteres son 6 de largo
-    uint8_t i=0;
-    for(; i < 6 ; i++)
+    for(index = 0; index < 6 ; index++)
     uOLED_Send(0x00, 0);
     uOLED_ResetCoords();
 }
