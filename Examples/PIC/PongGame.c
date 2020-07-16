@@ -5,8 +5,8 @@
  * Created on 13 de junio de 2018, 07:30 PM
  */
 
-//what is this: is just a simple pong game :) controlled by a keypad
-// working in pic 16f877a
+//what is this: is just a simple pong game :) 
+//working in pic 16f877a
 // CONFIG
 
 #pragma config FOSC = HS   // Oscillator Selection bits (HS oscillator)

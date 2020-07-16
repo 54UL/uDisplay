@@ -1,12 +1,17 @@
-#include "Oled_1306Driver.h"
-#include <AT89X52.h>
+#include <AT89X52.H>
+#define SCL_PIN P3_0
+#define SDA_PIN P3_1
+#define OLED_LOAD_DEFAULT_FONT
 
-void main ()
+#include <uOledLib.h>
+
+void main()
 {
-	OLED_Initialize();
-	OLED_cls();
-	OLED_gotoxy(0,0);
-	OLED_DrawString("hello world");
-	OLED_gotoxy(1,0);
-	OLED_DrawString(":3");
+	uOLED_Initialize();
+	uOLED_gotoxy(0, 0);
+	uOLED_DrawString("HelloWorld form 8051");
+	uOLED_gotoxy(6, 0);
+	uOLED_DrawString("Viva mexico :3");
+	while (1);
+	return;
 }
