@@ -1,6 +1,6 @@
 #ifndef UOLEDLIB_H
 #define UOLEDLIB_H
-#define __C51__
+
 /*
 BSD 2-Clause License
 
