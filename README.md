@@ -21,11 +21,6 @@ void uOLED_Send(uint8_t Data, uint8_t IsCommand);
 void uOLED_Initialize()
 ```
 
-### Initialize the oled display comunication
-```c
-void uOLED_Initialize()
-```
-
 ### Reset row and colum cursor position
 ```c
 void uOLED_ResetCoords(void)
@@ -50,7 +45,7 @@ void uOLED_CleanChar(uint8_t row, uint8_t col)
 ```c
 void uOLED_DrawString(const char *string)
 ```
-### Draws a sprite in position x and y, the dimensions of the sprite must be passed and the last argument "clean", if is 1, is gonna clean all the area of the sprite ignoring the data in 'sprite' argument and writing 0's to the scren (no pixel drawn)
+### Draws a sprite in position x and y, if clean is 1 will set to 0's the sprite area (no pixel shown)
 ```c
 void uOLED_DrawSprite(uint8_t x, uint8_t y, const uint8_t *sprite, unsigned int spriteLenght, uint8_t w, uint8_t h, uint8_t Clean)
 ```
