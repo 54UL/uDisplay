@@ -85,7 +85,7 @@ void uOLED_CleanChar(uint8_t row, uint8_t col)
 ```c
 void uOLED_DrawString(const char *string)
 ```
-#### Draws and string in the current cursor position
+#### Draws a string in the current cursor position
 ***
 
 ```c
