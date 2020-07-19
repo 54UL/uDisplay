@@ -35,13 +35,13 @@ Is pretty easy to get this lib working in xc8 or c51, you only have to let know 
 ```c
 #define SDA_PIN <int value>
 ```
-#### this for I2C sda pin spec for software implementation (IS ONLY WORKING IN C51)
+#### this is for I2C sda pin spec for software implementation (IS ONLY WORKING IN C51)
 ***
 
 ```c
 #define SCL_PIN <int value>
 ```
-#### this for I2C scl pin spec for software implementation (IS ONLY WORKING IN C51)
+#### this is for I2C scl pin spec for software implementation (IS ONLY WORKING IN C51)
 ***
 
 ## C API
@@ -73,13 +73,13 @@ void uOLED_ClearDisplay()
 ```c
 void uOLED_Putchar(char c)
 ```
-#### Draws an single char in the current row and colum position
+#### Draws a single char in the current row and colum position
 ***
 
 ```c
 void uOLED_CleanChar(uint8_t row, uint8_t col)
 ```
-#### Clean the area to the dimensions of a char gylph.
+#### Cleans the area within the dimension of a char gylph.
 ***
 
 ```c
