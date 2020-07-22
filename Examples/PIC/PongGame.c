@@ -1,14 +1,14 @@
 /*
- * File:   GEMBOY.c
+ * File:   PongGame.c
  * Author: Saul
  *
  * Created on 13 de junio de 2018, 07:30 PM
  */
 
 //what is this: is just a simple pong game :) 
-//working in pic 16f877a
+//DEMO CODE FOR PIC 16F877A
 // CONFIG
-
+#define OLED_LOAD_DEFAULT_FONT
 #pragma config FOSC = HS   // Oscillator Selection bits (HS oscillator)
 #pragma config WDTE = OFF  // Watchdog Timer Enable bit (WDT disabled)
 #pragma config PWRTE = OFF // Power-up Timer Enable bit (PWRT disabled)
@@ -17,7 +17,6 @@
 #pragma config CPD = OFF   // Data EEPROM Memory Code Protection bit (Data EEPROM code protection off)
 #pragma config WRT = OFF   // Flash Program Memory Write Enable bits (Write protection off; all program memory may be written to by EECON control)
 #pragma config CP = OFF    // Flash Program Memory Code Protection bit (Code protection off)
-#define OLED_LOAD_DEFAULT_FONT
 
 #include <xc.h>
 #include <pic16f877a.h>
@@ -72,38 +71,39 @@ void Credits()
     while (1);
 }
 
-char GetButtonPressed()
+char GetButtonPressed(uint8_t blockingExecution)
 {
-    static uint8_t turn; // 0=P1 turn,1=P2 turn
-    turn = !turn;
-    if (turn)
-    {
-        if (PORTBbits.RB0)
-            return '0';
-        if (PORTBbits.RB1)
-            return '1';
-    }
-    else
-    {
-        if (PORTBbits.RB0)
-            return '2';
-        if (PORTBbits.RB1)
-            return '3';
-    }
+    char buttonValue = "0";
+
+    while((PORTB & 0b00001111) == 0 && blockingExecution);
+
+    if (PORTBbits.RB0)
+        buttonValue = '1';
+    else if (PORTBbits.RB1)
+        buttonValue = '2';
+
+    if (PORTBbits.RB2)
+        buttonValue = '3';
+    else if (PORTBbits.RB3)
+        buttonValue = '4';
+
+    while((PORTB & 0b00001111) != 0 && blockingExecution);
+
+    return buttonValue;
 }
 
 //every thing that should be logic code must be looped and designed for that =3
 void MenuLogic()
 {
     //trabamos la ejecucion
-    char key = GetButtonPressed();
-    if (key == '2' && EleccionMenu > 1)
+    char key = GetButtonPressed(1);
+    if (key == '1' && EleccionMenu > 1)
     {
         uOLED_CleanChar(15, EleccionMenu);
         EleccionMenu--;
         DrawableArrow(15, EleccionMenu);
     }
-    else if (key == '1' && EleccionMenu < 3)
+    else if (key == '2' && EleccionMenu < 3)
     {
         uOLED_CleanChar(15, EleccionMenu);
         EleccionMenu++;
@@ -167,12 +167,12 @@ void ConfigurePorts()
     TRISB = 0X00001111;
 }
 
-void MovePlayer(char *keyPressed, const char up, const char down, uint8_t *value)
+void MovePlayer(char keyPressed, const char up, const char down, uint8_t *value)
 {
-    if (*keyPressed == up && VerticalPosPlayer1 > 2)
-        *value--;
-    else if (*keyPressed == down && VerticalPosPlayer1 < 6)
-        *value++;
+    if (keyPressed == up &&  *value > 2)
+        *value = *value - 1;
+    else if (keyPressed == down &&  *value < 6)
+        *value = *value+1;
 }
 
 void main(void)
@@ -205,14 +205,13 @@ void main(void)
                 while (1) //solamente para que no repita toda la iteracion anterior
                 {
                     //Check the input for both players
-                    if ((PORTB & 0X00001111) != 0) //THIS CHECKS FOR INPUT CHANGES
+                    if ((PORTB & 0b00001111) != 0) //THIS CHECKS FOR INPUT CHANGES
                     {
                         uOLED_DrawSprite(4, VerticalPosPlayer1, 0, 6, 2, 1, 1);
                         uOLED_DrawSprite(122, VerticalPosPlayer2, 0, 6, 2, 1, 1);
-                        //for player 1
-                        char keyprss = GetButtonPressed();
-                        MovePlayer(keyprss, '1', '2', VerticalPosPlayer1);
-                        MovePlayer(keyprss, '3', '4', VerticalPosPlayer2);
+                        char keyprss = GetButtonPressed(0);
+                        MovePlayer(keyprss, '1', '2', &VerticalPosPlayer1);
+                        MovePlayer(keyprss, '3', '4', &VerticalPosPlayer2);
                     }
                     //All redraw things goes here
                     uOLED_DrawSprite(BallPos.x, BallPos.y, 0, 6, 6, 0, 1);
