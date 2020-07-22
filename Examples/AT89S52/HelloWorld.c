@@ -9,7 +9,7 @@ void main()
 {
 	uOLED_Initialize();
 	uOLED_gotoxy(0, 0);
-	uOLED_DrawString("HelloWorld form 8051");
+	uOLED_DrawString("HelloWorld from 8051");
 	uOLED_gotoxy(6, 0);
 	uOLED_DrawString("Viva mexico :3");
 	while (1);
