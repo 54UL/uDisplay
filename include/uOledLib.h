@@ -38,9 +38,7 @@ USE_I2C_SOFTWARE_IMPLEMENTATION
 USE_DELAY_SOFTWARE_IMPLEMENTATION: ENABLES THE USE OF SOFTWARE DELAY BY PROVIDING EXTRA INFO ABOUT THE INSTRUCTION CYCLE TIMES
 SDA_PIN : const int of the bit of sda 
 SCL_PIN: const int of the bit of sda
-
 */
-
 
 /*
 TODOS:
@@ -75,6 +73,8 @@ TODOS:
 #define uint8_t unsigned char
 #define uint16_t unsigned short int
 #define MEMORY_KEYWORD code
+#else
+#include <stdint.h>
 #endif
 
 //COMAND TABLE FOR 1306
