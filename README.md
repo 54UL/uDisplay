@@ -1,4 +1,4 @@
-# SSD1306_OLED_LIB (uOLED)
+# uOLED
 ## What is this?
 lightweight implementation of ssd1306 128x64 monochrome display controller for XC8 and C51 compilers, coming soon agnostic device and avr hardware capabilities.
 
