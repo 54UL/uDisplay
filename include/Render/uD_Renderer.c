@@ -1,13 +1,12 @@
-#include <uDisplay.h>
-#include <uDisplayDriver.h>
+#include "uD_Renderer.h"
 
-static struct uDisplayDriver* driver;
+static uDisplayDriver* underlyingDriver;
 
-void uDisplay_Initialize(struct uDRenderConfig* config)
+void uDisplay_Initialize(uDRenderConfig* config)
 {
   // Initialize the display driver
-  driver = config->protocol;
-  driver->Init(config->protocol);
+  underlyingDriver = config->driver;
+  underlyingDriver->Init(config->driver);
 }
 
 void uDisplay_DrawPixel(uint8_t x, uint8_t y, uint8_t color)
@@ -17,48 +16,35 @@ void uDisplay_DrawPixel(uint8_t x, uint8_t y, uint8_t color)
 
   // Send the command to set the display buffer start address
   uint8_t start_address[] = {0xB0 | (y/8), x & 0x0F, 0x10 | (x >> 4)};
-  driver->SendCommand(start_address, sizeof(start_address));
+  underlyingDriver->SendCommand(start_address, sizeof(start_address));
 
   // Send the data to set the pixel color
   uint8_t data[] = {1 << (y % 8)};
   if (color == 0) {
     data[0] = 0;
   }
-  driver->SendData(data, sizeof(data));
+  underlyingDriver->SendData(data, sizeof(data));
 }
 
-void uDisplay_DrawBuffer(struct uDBufferDescriptor buffer)
+void uDisplay_DrawBuffer(uDBufferDescriptor buffer)
 {
   // Send the command to set the display buffer start address
   uint8_t start_address[] = {0xB0 | (buffer.y/8), buffer.x & 0x0F, 0x10 | (buffer.x >> 4)};
-  driver->SendCommand(start_address, sizeof(start_address));
+  underlyingDriver->SendCommand(start_address, sizeof(start_address));
 
   // Send the data to set the buffer
-  driver->SendData(buffer.data, buffer.length);
+  underlyingDriver->SendData(buffer.data, buffer.length);
 }
 
-void uDisplay_StartDrawCall(struct uDBufferDescriptor buffer)
+void uDisplay_StartDrawCall(uDBufferDescriptor buffer)
 {
   // Send the command to set the display buffer start address
   uint8_t start_address[] = {0xB0 | (buffer.y/8), buffer.x & 0x0F, 0x10 | (buffer.x >> 4)};
-  driver->SendCommand(start_address, sizeof(start_address));
+  underlyingDriver->SendCommand(start_address, sizeof(start_address));
 }
 
-void uDisplay_CommitDrawCall(struct uDBufferDescriptor buffer)
+void uDisplay_CommitDrawCall(uDBufferDescriptor buffer)
 {
   // Send the data to set the buffer
-  driver->SendData(buffer.data, buffer.length);
-}
-
-static struct uDisplay display = {
-  uDisplay_Initialize,
-  uDisplay_DrawPixel,
-  uDisplay_DrawBuffer,
-  uDisplay_StartDrawCall,
-  uDisplay_CommitDrawCall
-};
-
-struct uDisplay* uDisplay_GetInstance(void)
-{
-  return &display;
+  underlyingDriver->SendData(buffer.data, buffer.length);
 }

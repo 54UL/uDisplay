@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "ud_api.h": "c",
+        "interrupt.h": "c",
+        "stdint.h": "c",
+        "ud_i2c.h": "c",
+        "io.h": "c",
+        "ud_spi.h": "c",
+        "ud_renderer.h": "c",
+        "ud_delay.h": "c"
+    }
+}

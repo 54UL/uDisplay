@@ -1,7 +1,10 @@
 #ifndef U_DISPLAY_API_H
 #define U_DISPLAY_API_H
 
-struct uDBufferDescriptor 
+//GENERIC INCLUDES
+#include <stdint.h>
+
+typedef struct 
 {
   uint8_t x;
   uint8_t y;
@@ -9,26 +12,36 @@ struct uDBufferDescriptor
   uint8_t h;
   const uint8_t *data;
   unsigned int length;
-};
+} uDBufferDescriptor;
+
+typedef enum {
+    MONOCHROME,
+    GRAYSCALE,
+    RGB,
+    RGBA,
+    BGRA,
+    ARGB,
+    ABGR,
+} uDPixelFormat;
 
 struct uDDrawable 
 {
-  PixelFormat format,
-  uint8_t* data
+  uDPixelFormat format;
+  uint8_t  length;
+  uint8_t* data;
 };
 
 struct uDPoint
 {
-  uDDrawable drawable;
+  struct uDDrawable drawable;
   int x,y;
 };
 
 struct uDFont
 {
-  uDDrawable drawable;
+  struct uDDrawable drawable;
   int x,y;
 };
-
 
 //INTERFACES
 typedef struct 
@@ -41,50 +54,46 @@ typedef struct
   void (*receive)(uint8_t *data, uint16_t len);
 } uDisplayUnderlyingProtocol;
 
-
 typedef struct 
 {
-  void (*Init)(struct uDisplayUnderlyingProtocol *protocol);
+  void (*Init)(uDisplayUnderlyingProtocol *protocol);
   void (*SendCommand)(uint8_t* command, uint16_t len);
   void (*SendData)(uint8_t* data, uint16_t len);
   void (*Dispose)(void);
 } uDisplayDriver;
 
-
-struct uDRenderConfig 
+typedef struct
 {
-  struct uDisplayUnderlyingProtocol *protocol
-  struct uDisplayDriver *protocol
-};
+  uDisplayUnderlyingProtocol *protocol;
+  uDisplayDriver * driver;
+} uDRenderConfig;
 
 typedef struct 
 {
-    void (*Initialize)(struct uDRenderConfig * config );
+    void (*Initialize)(uDRenderConfig *config );
     void (*DrawPixel)(void);
-    void (*DrawBuffer)(struct uDBufferDescriptor);
-    void (*StartDrawCall)(struct uDBufferDescriptor);
-    void (*CommitDrawCall)(struct uDBufferDescriptor);
+    void (*DrawBuffer)(uDBufferDescriptor *drawable);
+    void (*StartDrawCall)(void);
+    void (*CommitDrawCall)(void);
 } uDisplay;
 
-
-
 //BASE DEFINITION
-typedef struct uDisplayEngine 
+typedef struct  
 {
-  void (*initialize)(struct uDisplay * uDisplayInstance);
+  void (*initialize)(uDisplay * uDisplayInstance);
   void (*moveTo)(int x, int y);
   void (*Draw)(struct uDDrawable * drawable);
   void (*DrawString)(struct uDFont * font, char * text);
   //refresh rate, text rendering, base color format
-};
+} uDisplayEngine;
 
 //USES UDisplayEngine as base
 typedef struct uDisplayCanvasEngine {
-    void (*initialize)(struct uDisplay * uDisplayInstance);
-    void (*DrawPixel)(const char *canvasId,uDDrawable drawable);
+    void (*initialize)(uDisplay * uDisplayInstance);
+    void (*DrawPixel)(const char *canvasId,struct uDDrawable* drawable);
     void (*clear)();
-    void (*setFillColor)(uDDrawable* drawable);
-    void (*setStrokeColor)(uDDrawable* drawable);
+    void (*setFillColor)(struct uDDrawable* drawable);
+    void (*setStrokeColor)(struct uDDrawable* drawable);
     void (*drawRect)(int x, int y, int width, int height);
     void (*fillRect)(int x, int y, int width, int height);
     void (*strokeRect)(int x, int y, int width, int height);
@@ -96,7 +105,7 @@ typedef struct uDisplayCanvasEngine {
     void (*arc)(int x, int y, int radius, double startAngle, double endAngle, int anticlockwise);
     void (*fill)();
     void (*stroke)();
-    void (*drawImage)(int x, int y,uDDrawable* drawable drawable);
+    void (*drawImage)(int x, int y, struct uDDrawable* drawable);
     void (*createLinearGradient)(int x0, int y0, int x1, int y1);
     void (*createRadialGradient)(int x0, int y0, int r0, int x1, int y1, int r1);
 } uDisplayCanvasEngine;

@@ -1,14 +1,6 @@
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <stdint.h>
-#include "i2c.h"
-
+#include "uD_I2C.h"
 
 //THIS IS AVR IMPL
-#define F_CPU 8000000UL
-
-#define I2C_FREQ 100000UL
-#define I2C_PRESCALER (1 << TWPS0)
 
 void i2c_init(void) {
     TWSR |= I2C_PRESCALER;
@@ -68,12 +60,3 @@ void i2c_receive(uint8_t *data, uint16_t len) {
     data[len - 1] = i2c_read_nack();
     i2c_stop();
 }
-
-uDisplayUnderlyingProtocol uDisplay_UnderlyingProtocol_I2C = {
-    .init = i2c_init,
-    .read = i2c_receive,
-    .write = i2c_send,
-    .transfer = i2c_transfer,
-    .send = i2c_send,
-    .receive = i2c_receive,
-};
