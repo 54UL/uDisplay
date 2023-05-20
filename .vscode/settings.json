@@ -7,6 +7,10 @@
         "io.h": "c",
         "ud_spi.h": "c",
         "ud_renderer.h": "c",
-        "ud_delay.h": "c"
+        "ud_delay.h": "c",
+        "ud_protocols.h": "c",
+        "ud_ssd1306_driver.h": "c",
+        "ud_drivers.h": "c",
+        "ud_engines.h": "c"
     }
 }

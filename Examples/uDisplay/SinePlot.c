@@ -1,5 +1,9 @@
 #include <math.h>
-#include "uDisplayAPI.h"
+
+#include "../../include/uD_Api.h"
+#include "../../include/Drivers/Protocols/uD_Protocols.h"
+#include "../../include/Drivers/uD_Drivers.h"
+#include "../../include/Engines/uD_Engines.h"
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -13,49 +17,31 @@
 uint8_t waveBuffer[SCREEN_WIDTH];
 
 // Function to generate sine wave data
-void generateWaveData() {
-  for (int x = 0; x < SCREEN_WIDTH; x++) {
+void generateWaveData() 
+{
+  for (int x = 0; x < SCREEN_WIDTH; x++) 
+  {
     double y = WAVE_AMPLITUDE * sin((2 * M_PI * x) / WAVE_PERIOD);
     waveBuffer[x] = (uint8_t) round(y + SCREEN_HEIGHT / 2);
   }
 }
 
-int main() {
+//unit testing
+//todo fix the actual example... (discard all this changes)
+int main() 
+{
+  uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C, &uDisplay_SSD1306Driver };
+  uDisplay_UnderlyingProtocol_I2C.init(0x3C);
 
-  // Initialize underlying protocol and driver for SSD1306 display
-  uDisplayUnderlyingProtocol protocol;
-  uDisplayDriver driver;
-  uDRenderConfig config = { &protocol, &driver };
-  uDisplay display;
+  uDisplay_SSD1306Driver.Init(&uDisplay_UnderlyingProtocol_I2C);
+  uint8_t buff[1] = {0xFF};
+  uint8_t halfScreenCount = 0x00;
 
-  protocol.init();
-  driver.Init(&protocol);
+  while(halfScreenCount++ < (SCREEN_HEIGHT + SCREEN_WIDTH) / 2) 
+  {
+      uDisplay_SSD1306Driver.SendData(buff,sizeof(buff));
+  }
 
-  // Generate sine wave data
-  generateWaveData();
-
-  // Initialize display using configuration
-  display.Initialize(&config);
-
-  // Create buffer descriptor for sine wave data
-  struct uDBufferDescriptor waveDesc = {
-    .x = 0,
-    .y = 0,
-    .w = SCREEN_WIDTH,
-    .h = 1,
-    .data = waveBuffer,
-    .length = SCREEN_WIDTH
-  };
-
-  // Start draw call and draw sine wave data
-  display.StartDrawCall(&waveDesc);
-  display.DrawBuffer(waveDesc);
-
-  // Commit draw call to display sine wave
-  display.CommitDrawCall(waveDesc);
-
-  // Clean up
-  driver.Dispose();
-
+  while(1);
   return 0;
 }

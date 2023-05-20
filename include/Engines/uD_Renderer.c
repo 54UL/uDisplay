@@ -6,7 +6,8 @@ void uDisplay_Initialize(uDRenderConfig* config)
 {
   // Initialize the display driver
   underlyingDriver = config->driver;
-  underlyingDriver->Init(config->driver);
+  // config->protocol->init(0x78);
+  underlyingDriver->Init(config->protocol);
 }
 
 void uDisplay_DrawPixel(uint8_t x, uint8_t y, uint8_t color)

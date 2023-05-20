@@ -10,7 +10,7 @@ typedef struct
   uint8_t y;
   uint8_t w;
   uint8_t h;
-  const uint8_t *data;
+  uint8_t *data;
   unsigned int length;
 } uDBufferDescriptor;
 
@@ -46,12 +46,10 @@ struct uDFont
 //INTERFACES
 typedef struct 
 {
-  void (*init)(void);
-  uint8_t (*read)(uint8_t address, uint8_t reg);
-  void (*write)(uint8_t address, uint8_t reg, uint8_t value);
-  void (*transfer)(uint8_t *data, uint16_t len);
-  void (*send)(uint8_t *data, uint16_t len);
-  void (*receive)(uint8_t *data, uint16_t len);
+  void    (*configure)(void);
+  void    (*init)(uint8_t address);
+  void    (*read)(uint8_t *data,  uint16_t len);
+  void    (*write)(uint8_t cmd, uint8_t* data, uint8_t len);
 } uDisplayUnderlyingProtocol;
 
 typedef struct 
@@ -71,10 +69,10 @@ typedef struct
 typedef struct 
 {
     void (*Initialize)(uDRenderConfig *config );
-    void (*DrawPixel)(void);
-    void (*DrawBuffer)(uDBufferDescriptor *drawable);
-    void (*StartDrawCall)(void);
-    void (*CommitDrawCall)(void);
+    void (*DrawPixel)(uint8_t x, uint8_t y, uint8_t color);
+    void (*DrawBuffer)(uDBufferDescriptor buffer);
+    void (*StartDrawCall)(uDBufferDescriptor buffer);
+    void (*EndDrawCall)(uDBufferDescriptor buffer);
 } uDisplay;
 
 //BASE DEFINITION

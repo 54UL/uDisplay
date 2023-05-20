@@ -1,25 +1,26 @@
-#include "../uD_Api.h"
-#include "./Protocols/uD_I2C.h"
+#include "uD_SSD1306_Driver.h"
+// #include "../uD_Api.h"
+// #include "./Protocols/uD_I2C.h"
 
-#define SSD1306_I2C_ADDR 0x3C
+#define SSD1306_I2C_CMD 0x00
+#define SSD1306_I2C_DATA 0x40
 
 static uDisplayUnderlyingProtocol *underlying_protocol;
 
-static void ssd1306_send_command(uint8_t *command, uint16_t len)
-{
-  // struct uDisplayUnderlyingProtocol *protocol = ((ST7789Driver*)this)->protocol;
-  
-  underlying_protocol->write(SSD1306_I2C_ADDR, 0x00, *command);
+void ssd1306_send_command(uint8_t *command, uint16_t len)
+{  
+  underlying_protocol->write(SSD1306_I2C_CMD, command, len);
 }
 
-static void ssd1306_send_data(uint8_t *data, uint16_t len)
+void ssd1306_send_data(uint8_t *data, uint16_t len)
 {
-  underlying_protocol->write(SSD1306_I2C_ADDR, 0x40, *data);
+  underlying_protocol->write(SSD1306_I2C_DATA, data, len);
 }
 
-static void ssd1306_init(uDisplayUnderlyingProtocol *protocol)
+void ssd1306_init(uDisplayUnderlyingProtocol *protocol)
 {
   underlying_protocol = protocol;
+  // protocol->init(0x3C);
 
   // Turn display off
   uint8_t command[] = {0xAE};
@@ -70,7 +71,7 @@ static void ssd1306_init(uDisplayUnderlyingProtocol *protocol)
   ssd1306_send_command(set_display_on, sizeof(set_display_on));
 }
 
-static void ssd1306_dispose(void)
+void ssd1306_dispose(void)
 {
   // Nothing to do
 }

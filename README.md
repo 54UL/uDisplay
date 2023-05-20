@@ -50,7 +50,9 @@ set(ARCH "AVR")
 * avrdude
 * C51 (Arm keli)
 * XC8 (Microchip)
-
+```bash
+sudo apt-get install avr-libc avrdude gcc-avr binutils-avr gdb-avr
+```
 #### Ubuntu:
 ```bash
 sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude
