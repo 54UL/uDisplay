@@ -20,7 +20,7 @@ set(CMAKE_ASM_FLAGS "-mmcu=${MCU}")
 
 # # Add the AVR include directories
 include_directories(
-    ${AVR_INCLUDE_DIR}/avr
+/usr/lib/gcc/avr/5.4.0
 )
 
 # uDisplay library sources

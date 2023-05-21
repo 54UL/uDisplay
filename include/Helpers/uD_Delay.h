@@ -2,12 +2,17 @@
 #define UD_DELAY_H
 
 #ifdef __AVR__
-#define F_CPU 80000
+// #define F_CPU 80000
 
 #include <util/delay.h>
 static void uD_delay_ms(uint16_t ms) {
-    for(uint16_t t = 0; t < ms; ms++)
+    for(uint16_t t = 0; t < ms; t++)
         _delay_ms(1);
+}
+
+static void uD_delay_us(uint16_t us) {
+    for(uint16_t t = 0; t < us; t++)
+        _delay_us(1);
 }
 
 // For xc8 compiler

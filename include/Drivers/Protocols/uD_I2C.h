@@ -1,23 +1,13 @@
 #ifndef UD_I2C_H
 #define UD_I2C_H
-
-
-#include <stdint.h>
-
 #include "../../uD_Api.h"
 
+#include <stdint.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-//AVR IMPL
-
-
-#ifndef F_CPU
-#define F_CPU 8000000UL
-#endif
-
-void    i2c_init(void);
-void    i2c_start(uint8_t address);
+void    i2c_init(uint8_t address);
+void    i2c_start(void);
 void    i2c_stop(void);
 uint8_t i2c_read_ack(void);
 uint8_t i2c_read_nack(void);

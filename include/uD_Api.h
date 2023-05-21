@@ -46,8 +46,8 @@ struct uDFont
 //INTERFACES
 typedef struct 
 {
-  void    (*configure)(void);
-  void    (*init)(uint8_t address);
+  void    (*configure)(uint8_t address);
+  void    (*init)(void);
   void    (*read)(uint8_t *data,  uint16_t len);
   void    (*write)(uint8_t cmd, uint8_t* data, uint8_t len);
 } uDisplayUnderlyingProtocol;
