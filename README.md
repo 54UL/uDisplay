@@ -1,39 +1,23 @@
 # uDisplay
+2D Display controller library for low spec MCU'S
+________________________________________________
 
-2D driver and rendering framework for AVR, PIC, 8051 AND STM32
+### Key features
 
-## Overview
-uDisplay has 5 modules: Timing, Comunications, Drivers and Rendering engines
+* Intented to run on many embbed c compilers
+* Lightweight/Portable implementation using only C and CMake
+* Buffer-less rendering (main library goal)
+* Generated header only library 
+* I2C and SPI Hardware/Software implementations
 
-### Timing 
-  - Software delays
-  - MCU Specific Implementation
-  - Open API
+## Example
 
-### Comunication protocols
-  - MCU Specific Implementation
-    - SPI and I2C hardware implementation
-      - AVR
-      - PIC
-  - Software implementations
-    - Bit banging in most of the plataforms
-  - Open API
-  
-### Drivers
-  - Uses a comunication protocol
-  - Display controller
-    - SSD1306
-    - ST7789
-  - Open API
+* How to run the program
+* Step-by-step bullets
 
-### Rendering engines layer
-- Uses a driver
-- 2D Rendering
-  - uDisplay         (base and built-in engine with basic rendering functions)
-    - uDisplayCanvas (HTML like canvas)
-    - uDisplayShell  (Terminal shell)
-    - uDisplayPlot   (Plot renderer)
-  - Open API (all engines must be based on the uDisplay base rendering engine.)
+```
+code blocks for commands
+```
 
 ## Getting Started
 
@@ -43,33 +27,25 @@ set(MCU  "attiny85")
 set(ARCH "AVR")
 ```
 
-### Dependencies
-
-* Cmake
+## Dependencies
+* CMake
 * avr-gnu toolchain
 * avrdude
-* C51 (Arm keli)
-* XC8 (Microchip)
+
 ```bash
 sudo apt-get install avr-libc avrdude gcc-avr binutils-avr gdb-avr
 ```
 #### Ubuntu:
+
 ```bash
 sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude
 ```
-
-### Installing
+## Installing
 
 * [See installation guide for avr]() 
 * [See installation guide for pic]() 
 
-### Executing program
 
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
 ## uDisplay device compatibility
 
 | MCU             | ARCH  | STATUS       |
@@ -84,11 +60,50 @@ code blocks for commands
 | STM32L053C8T6   | STM32 | DEVELOPMENT  |
 
 
-## Version History
+## uDisplay road map
 
-* 0.1
-    * Initial Release
+* 1.0 (WIP)
+    * Basic batch rendering
+    * Dedicated frame buffer or bufferles rendering 
+    * Helper  rendering functions (generic display built-ins)
+      - Clear display
+      - Rendering regions (colum and pages configuration)
+      - Content scrolling
+    * Basic in-memory font rendering
+    * Device compatibility
+      - ATTINY85
+      - ATMEGA328P
+    * Display drivers
+      - SSD1306
+      - SST7789
+    *  uDisplay benchmarking module
+      - FPS indicator
+      - Latency indicator
+    * Header only library (Generated)
+
+* 1.1 (FUTURE-RELEASE)
+    *  AVR C code optimizations
+    *  Display drivers
+        - ILI9341
+    * Touch drivers module
+        -  ILI9341 touch screen driver
+    * Device compatibility
+        - STM32 (ARM CORTEX M0)
+    * Multiple Screens running on the same library instance (uDisplay factory)
+
+#### OPTIONAL FEATURES
+
+* 1.X (FUTURE-RELEASE)
+  * Video rendering
+     - too complex??? idk, let's find out...
+  * Pseudo threads for uDisplay (uThreads library)
+    - Software implementation
+    - Harware implementation using timmers and interrupts
 
 ## Authors
 
 Contributors names and contact info
+
+## Resources used to implement uDisplay
+- [AVR Optimization tips and tricks] (https://ww1.microchip.com/downloads/en/AppNotes/doc8453.pdf)
+- [Open GL pixmap fonts rendering] (https://courses.cs.washington.edu/courses/cse457/98a/tech/OpenGL/font.c)

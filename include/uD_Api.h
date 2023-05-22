@@ -8,10 +8,17 @@ typedef struct
 {
   uint8_t x;
   uint8_t y;
-  uint8_t w;
-  uint8_t h;
+  uint8_t width;
+  uint8_t height;
+} uDRect;
+
+typedef struct 
+{
+  uint8_t width;
+  uint8_t height;
+  uint8_t dataLenght;
   uint8_t *data;
-  unsigned int length;
+  uDPixelFormat format;
 } uDBufferDescriptor;
 
 typedef enum {
@@ -24,31 +31,18 @@ typedef enum {
     ABGR,
 } uDPixelFormat;
 
-struct uDDrawable 
+typedef struct 
 {
-  uDPixelFormat format;
-  uint8_t  length;
-  uint8_t* data;
-};
-
-struct uDPoint
-{
-  struct uDDrawable drawable;
-  int x,y;
-};
-
-struct uDFont
-{
-  struct uDDrawable drawable;
-  int x,y;
-};
+  uDPixelFormat colorFormat;
+  uint8_t * pallete; // EJ  pallete = [BYTE1,BYTE2,BYTE3,BYTE4], the format determines how is it interpreted the aray
+} uDColor;
 
 //INTERFACES
 typedef struct 
 {
   void    (*configure)(void);
   void    (*init)(uint8_t address);
-  void    (*read)(uint8_t *data,  uint16_t len);
+  void    (*read)(uint8_t *data,  uint16_t len); //NOT USED AND NO INTENATIONS TO BE USED (ANALYZE IF THE BUFFERLES OPTION REQUIRES READING FROM THE DISPLAY)
   void    (*write)(uint8_t cmd, uint8_t* data, uint8_t len);
 } uDisplayUnderlyingProtocol;
 
@@ -68,24 +62,24 @@ typedef struct
 
 typedef struct 
 {
-    void (*Initialize)(uDRenderConfig *config );
-    void (*DrawPixel)(uint8_t x, uint8_t y, uint8_t color);
-    void (*DrawBuffer)(uDBufferDescriptor buffer);
-    void (*StartDrawCall)(uDBufferDescriptor buffer);
-    void (*EndDrawCall)(uDBufferDescriptor buffer);
+  //uDisplay interface base functions
+  void (*Initialize)(uDRenderConfig *config );
+  void (*StartDrawCall)(uDBufferDescriptor buffer);
+  void (*EndDrawCall)(uDBufferDescriptor buffer);
+  //UDisplay "engine" interface
+  void (*Clear) (void);
+  void (*ClearRegion)(uDRect* region);
+  void (*ResetOrigin)(void);
+  void (*Origin)((uDRect* origin);
+  //UDisplay base interface and "engine" drawing functions
+  void (*DrawPixel)(uint8_t x, uint8_t y, uDColor * color);
+  void (*DrawBuffer)(uDBufferDescriptor buffer);
+  void (*DrawChar)(char character);
+  void (*DrawString)(const char * string);
 } uDisplay;
 
-//BASE DEFINITION
-typedef struct  
-{
-  void (*initialize)(uDisplay * uDisplayInstance);
-  void (*moveTo)(int x, int y);
-  void (*Draw)(struct uDDrawable * drawable);
-  void (*DrawString)(struct uDFont * font, char * text);
-  //refresh rate, text rendering, base color format
-} uDisplayEngine;
-
-//USES UDisplayEngine as base
+/*
+//Html canvas like API (EXPERIMENTAL)
 typedef struct uDisplayCanvasEngine {
     void (*initialize)(uDisplay * uDisplayInstance);
     void (*DrawPixel)(const char *canvasId,struct uDDrawable* drawable);
@@ -107,6 +101,6 @@ typedef struct uDisplayCanvasEngine {
     void (*createLinearGradient)(int x0, int y0, int x1, int y1);
     void (*createRadialGradient)(int x0, int y0, int r0, int x1, int y1, int r1);
 } uDisplayCanvasEngine;
-
+*/
 
 #endif //U_DISPLAY_API_H

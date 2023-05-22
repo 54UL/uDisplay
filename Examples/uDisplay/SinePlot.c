@@ -1,3 +1,5 @@
+//TODO: FIX EXAMPLE
+
 #include <math.h>
 
 #include "../../include/uD_Api.h"
@@ -32,15 +34,8 @@ int main()
 {
   uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C, &uDisplay_SSD1306Driver };
   uDisplay_UnderlyingProtocol_I2C.init(0x3C);
-
   uDisplay_SSD1306Driver.Init(&uDisplay_UnderlyingProtocol_I2C);
-  uint8_t buff[1] = {0xFF};
-  uint8_t halfScreenCount = 0x00;
-
-  while(halfScreenCount++ < (SCREEN_HEIGHT + SCREEN_WIDTH) / 2) 
-  {
-      uDisplay_SSD1306Driver.SendData(buff,sizeof(buff));
-  }
+  //perform rendering
 
   while(1);
   return 0;

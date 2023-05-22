@@ -1,4 +1,4 @@
-void draw_cube(uDisplay* display, uint8_t x, uint8_t y, uint32_t color) {
+void draw_square(uDisplay* display, uint8_t x, uint8_t y, uint32_t color) {
   struct uDBufferDescriptor cube = {
     .x = x,
     .y = y,
@@ -18,12 +18,12 @@ void draw_cube(uDisplay* display, uint8_t x, uint8_t y, uint32_t color) {
   display->CommitDrawCall(cube);
 }
 
-void draw_random_cubes(uDisplay* display) {
+void draw_random_squares(uDisplay* display) {
   for (int i = 0; i < 10; i++) {
     uint8_t x = rand() % (SCREEN_WIDTH - CUBE_SIZE);
     uint8_t y = rand() % (SCREEN_HEIGHT - CUBE_SIZE);
     uint32_t color = rand() % 0xFFFFFF; // 24-bit color
-    draw_cube(display, x, y, color);
+    draw_square(display, x, y, color);
   }
 }
 
@@ -42,7 +42,7 @@ int main() {
   display.Initialize(&config);
 
   // draw random colored cubes
-  draw_random_cubes(&display);
+  draw_random_squares(&display);
 
   // clean up
   display.Dispose();
