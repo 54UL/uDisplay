@@ -1,8 +1,8 @@
 #include <math.h>
 #include <avr/io.h>
+
 //uDisplay config + my program defines (top most define)
 #define F_CPU 8000000UL
-
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
@@ -52,19 +52,22 @@ static inline uint8_t SSD1306_I2C_HARDWARE_AVR_TEST()
 static inline uint8_t SSD1306_I2C_SOFTWARE_AVR_TEST()
 {
     //Configure the display render
-    uint16_t drawCount = 0;
+    uint8_t drawCount = 0;
     uint8_t buff[3] = { 0XAA, 0XBB, 0XCC};
     uDRenderConfig config = {&uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver};
     
     //Call configure before doing anythig else (only call once if selecteed pins does not do anything more)
     uDisplay_UnderlyingProtocol_I2C_Software.configure(0x78);
+
     //Initialize the I2C protocol and the ssd1306 driver with the initialized protocol
     uDisplay_UnderlyingProtocol_I2C_Software.init();
     uDisplay_SSD1306Driver.Init(&uDisplay_UnderlyingProtocol_I2C_Software);
  
     //SSD1306 DRIVER WITH I2C SOFTWARE TEST (renders a pseduo random pattern all over the screen)
-    while(drawCount++ < (SCREEN_HEIGHT + SCREEN_WIDTH))
+    while (drawCount++ < 0XFF )
+    {
         uDisplay_SSD1306Driver.SendData(buff, sizeof(buff));
+    }
 
     return 0;
 }
