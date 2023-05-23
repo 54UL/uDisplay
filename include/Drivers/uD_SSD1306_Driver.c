@@ -37,12 +37,12 @@
 
 static uDisplayUnderlyingProtocol *underlying_protocol;
 
-void ssd1306_send_command(uint8_t *command, uint16_t len)
+void ssd1306_send_command(uint8_t *command, uint8_t len)
 {
   underlying_protocol->write(SSD1306_I2C_CMD, command, len);
 }
 
-void ssd1306_send_data(uint8_t *data, uint16_t len)
+void ssd1306_send_data(uint8_t *data, uint8_t len)
 {
   underlying_protocol->write(SSD1306_I2C_DATA, data, len);
 }

@@ -5,8 +5,8 @@
 #include <stdint.h>
 
 //Driver impl
-void ssd1306_send_command(uint8_t *command, uint16_t len);
-void ssd1306_send_data(uint8_t *data, uint16_t len);
+void ssd1306_send_command(uint8_t *command, uint8_t len);
+void ssd1306_send_data(uint8_t *data, uint8_t len);
 void ssd1306_init(uDisplayUnderlyingProtocol *protocol);
 void ssd1306_dispose(void);
 

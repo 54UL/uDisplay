@@ -11,6 +11,8 @@
         "ud_protocols.h": "c",
         "ud_ssd1306_driver.h": "c",
         "ud_drivers.h": "c",
-        "ud_engines.h": "c"
+        "ud_engines.h": "c",
+        "ud_i2csoftware.h": "c",
+        "ud_display.h": "c"
     }
 }

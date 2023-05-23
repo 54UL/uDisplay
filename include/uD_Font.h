@@ -1,8 +1,21 @@
-#ifndef UOLEDLIB_COMMUNICATION_H
-#define UOLEDLIB_COMMUNICATION_H
+#ifndef UD_FONT_H
+#define UD_FONT_H
+
+#include <cstdint.h>
+
+//test define
+#define OLED_LOAD_DEFAULT_FONT
+
+//C51 prog mem keyword "code" bypass
+#ifndef MEMORY_KEYWORD
+#define MEMORY_KEYWORD 
+#endif
 
 #if defined(OLED_LOAD_DEFAULT_FONT)
- const  uint8_t MEMORY_KEYWORD DefaultFont[] = {
+
+ //6 x 8 @ 94 characters (default font)
+ const uint8_t MEMORY_KEYWORD uD_DefaultFont_6_8[] = 
+ {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // sp
     0x00, 0x00, 0x00, 0x2f, 0x00, 0x00, // !
     0x00, 0x00, 0x07, 0x00, 0x07, 0x00, // "
@@ -100,9 +113,8 @@
     0x00, 0x00, 0x06, 0x09, 0x09, 0x06  // ~
 };
 #else
- static uint8_t * DefaultFont;
+    const uint8_t * DefaultFont;
 #endif
 
-
-#endif /* UOLEDLIB_COMMUNICATION_H */
+#endif /* UD_FONT_H */
 

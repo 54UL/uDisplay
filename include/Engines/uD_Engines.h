@@ -2,7 +2,7 @@
 #define UD_ENGINES_H
 
 #include "../uD_Api.h"
-#include "uD_Renderer.h"
+#include "uD_Display.h"
 
 uDisplay uDisplayBaseEngine = {
   .Initialize = uDisplay_Initialize,
