@@ -1,13 +1,10 @@
-#include <math.h>
-#include <avr/io.h>
-
 //uDisplay config + my program defines (top most define)
 #define F_CPU 8000000UL
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-//lib includes and others...
-// #include "../../include/uD_Api.h" NOT USED YET?
+#include <math.h>
+#include <avr/io.h>
 #include "../../include/Drivers/Protocols/uD_Protocols.h"
 #include "../../include/Drivers/uD_Drivers.h"
 #include "../../include/Helpers/uD_Delay.h"
