@@ -1,3 +1,7 @@
+#TODO'S:
+#ADD LIBRARY PREFIXES
+#ADD CONFGIGURATIONS (TO MAKE THIS EZ TO HANDLE)
+#CONFIGURE UPLOAD STEPS AND AVR DUDE CONFIGURATION AT THE TOP OF THE FILE
 cmake_minimum_required(VERSION 3.10)
 project(uDisplay C CXX ASM)
 
@@ -6,7 +10,8 @@ set(MCU  "attiny85")
 set(ARCH "AVR")
 
 set(FIRMWARE_NAME "build/uDisplay.hex")
-file(GLOB_RECURSE UDISPLAY_ENTRY_POINT "Examples/uDisplayTests/DriverTest.c")
+file(GLOB_RECURSE UDISPLAY_ENTRY_POINT "Examples/protos/uart_echo.c")
+# file(GLOB_RECURSE UDISPLAY_ENTRY_POINT "Examples/uDisplayTests/DriverTest.c")
 
 # Set the path to the avr-gcc toolchain
 set(CMAKE_C_COMPILER "avr-gcc")
@@ -48,10 +53,7 @@ add_custom_command(TARGET uDisplay POST_BUILD
                    COMMAND avr-objcopy -O ihex -R .eeprom uDisplay.elf uDisplay.hex
                    COMMAND avr-objcopy -O binary -R .eeprom uDisplay.elf uDisplay.bin)
 
-# # # Upload the firmware to the microcontroller using avrdude
-# add_custom_target(upload
-#                   COMMAND avrdude -c usbasp -p attiny85 -U hfuse:w:0xD7:m
-#                   COMMAND avrdude -p ${MCU} -c usbasp -U flash:w:uDisplay.hex:i)
-
-# # Upload the firmware to the microcontroller using avrdude
-# add_custom_target(debug
+# #Upload the firmware to the microcontroller using avrdude
+add_custom_target(upload
+                  COMMAND avrdude -c usbasp -p attiny85 -U hfuse:w:0xD7:m
+                  COMMAND avrdude -p ${MCU} -c usbasp -U flash:w:uDisplay.hex:i)
