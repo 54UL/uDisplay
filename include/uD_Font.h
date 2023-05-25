@@ -14,7 +14,7 @@
 #if defined(OLED_LOAD_DEFAULT_FONT)
 
  //6 x 8 @ 94 characters (default font)
- const uint8_t MEMORY_KEYWORD uD_DefaultFont_6_8[] = 
+ const uint8_t MEMORY_KEYWORD uD_DefaultFont[] = 
  {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // sp
     0x00, 0x00, 0x00, 0x2f, 0x00, 0x00, // !
