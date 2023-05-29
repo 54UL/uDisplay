@@ -2,7 +2,7 @@
 #include <avr/io.h>
 #include "../../Helpers/uD_Delay.h"
 
-// Pin Definitions
+//TODO: MOVE THIS Pin Definitions
 #define SDA_PIN PB0
 #define SCL_PIN PB2
 

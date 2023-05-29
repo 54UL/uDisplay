@@ -6,7 +6,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-//AVR IMPL
+//todo move this FCPU AVR IMPL
 #ifndef F_CPU
 #define F_CPU 8000000UL
 #endif

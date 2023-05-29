@@ -1,9 +1,14 @@
 #ifndef U_DISPLAY_API_H
 #define U_DISPLAY_API_H
 
-/* MAIN TODO CODE WALL
+/* 
+* MAIN TODO CODE WALL
 * ADD ENUM TO DEFINE BUILT DISPLAY COMMANDS (THIS FOR THE DISPLAY DRIVER MODULE) 
-
+* uDisplay defines (compile time optimizations)
+* IMPLEMENT MULTIPLE WORD TYPES OF ITS KINDS
+  * BASIC WORD: base type
+  * TRANSFORMS: type for math operations and such
+  * TINY: smallest type
 */
 
 //GENERIC INCLUDES
@@ -38,15 +43,23 @@ typedef struct
 
 typedef struct 
 {
+  uint8_t width;
+  uint8_t height;
+  uint8_t dataLenght;
+  uint8_t *data;
+} uDFontDescriptor;
+
+typedef struct 
+{
   uDPixelFormat colorFormat;
-  uint8_t * colorData; // EJ  colorData = [R_BYTE1, G_BYTE2, B_BYTE3, A_BYTE4], the format determines how is it interpreted the aray
+  uint8_t *     colorData; // EJ  colorData = [R_BYTE1, G_BYTE2, B_BYTE3, A_BYTE4], the format determines how is it interpreted the aray
 } uDColor;
 
 //INTERFACES
 typedef struct 
 {
   void    (*configure)(uint8_t address);
-  void    (*init)(void);
+  void    (*Init)(void);
   void    (*read)(uint8_t *data,  uint16_t len);
   void    (*write)(uint8_t cmd, uint8_t* data, uint8_t len);
 } uDisplayUnderlyingProtocol;
@@ -64,6 +77,7 @@ typedef struct
 {
   uDisplayUnderlyingProtocol *protocol;
   uDisplayDriver * driver;
+  uint8_t deviceId;
 } uDRenderConfig;
 
 typedef struct 
@@ -77,7 +91,7 @@ typedef struct
   void (*ClearRegion)(uDRect* region);
   void (*ResetOrigin)(void);
   void (*Origin)(uDRect* origin);
-  void (*SetFont)(const uDBufferDescriptor * data);
+  void (*SetFont)(const uDFontDescriptor * data);
   //UDisplay base interface and "engine" drawing functions
   void (*DrawPixel)(uint8_t x, uint8_t y, uDColor * color);
   void (*DrawBuffer)(uDBufferDescriptor buffer);

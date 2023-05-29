@@ -12,7 +12,7 @@ void uDisplay_Clear (void);
 void uDisplay_ClearRegion(uDRect* region);
 void uDisplay_ResetOrigin(void);
 void uDisplay_SetOrigin(uDRect* origin);
-void uDisplay_SetFont(const uDBufferDescriptor * data);
+void uDisplay_SetFont(const uDFontDescriptor * data);
 //Draw functions
 void uDisplay_DrawPixel(uint8_t x, uint8_t y, uDColor * color);
 void uDisplay_DrawBuffer(uDBufferDescriptor buffer);

@@ -3,6 +3,7 @@
 
 //TODO: ADD A FUNCTION TO CALL ALMOST EVERY BUILT IN COMMAND FROM HERE
 //PROPOSAL: Call(BUILT_IN_ENUM_TYPE type, uint8_t payload, payloadLen);
+//REFACTOR DRIVER INTERFACE
 
 #include "../uD_Api.h"
 #include "uD_SSD1306_Driver.h"
