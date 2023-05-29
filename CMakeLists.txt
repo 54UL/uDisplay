@@ -1,7 +1,10 @@
-#TODO'S:
+#CMAKE TODO'S:
 #ADD LIBRARY PREFIXES
 #ADD CONFGIGURATIONS (TO MAKE THIS EZ TO HANDLE)
+#ADD ONLY HEADER LIBRARY GENERATION
 #CONFIGURE UPLOAD STEPS AND AVR DUDE CONFIGURATION AT THE TOP OF THE FILE
+#ADD MULTI COMPILER CONFIGURATION
+
 cmake_minimum_required(VERSION 3.10)
 project(uDisplay C CXX ASM)
 
@@ -13,7 +16,7 @@ set(FIRMWARE_NAME "build/uDisplay.hex")
 # Compile entry point
 # file(GLOB_RECURSE UDISPLAY_ENTRY_POINT "Examples/protos/uart_echo.c")
 # file(GLOB_RECURSE UDISPLAY_ENTRY_POINT "Examples/uDisplayTests/DriverTest.c")
-file(GLOB_RECURSE UDISPLAY_ENTRY_POINT "Examples/uDisplayTests/ProtocolsTests.c")
+file(GLOB_RECURSE UDISPLAY_ENTRY_POINT "Examples/uDisplayTests/uDisplayTest.c")
 
 # Set the path to the avr-gcc toolchain
 set(CMAKE_C_COMPILER "avr-gcc")

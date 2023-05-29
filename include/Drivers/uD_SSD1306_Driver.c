@@ -2,7 +2,6 @@
 
 #define SSD1306_I2C_CMD 0x00
 #define SSD1306_I2C_DATA 0x40
-
 #define SSD1306_SET_CONTRAST_CONTROL 0x81
 #define SSD1306_DISPLAY_ALL_ON_RESUME 0xA4
 #define SSD1306_DISPLAY_ALL_ON 0xA5
@@ -50,64 +49,57 @@ void ssd1306_send_data(uint8_t *data, uint8_t len)
 void ssd1306_init(uDisplayUnderlyingProtocol *protocol)
 {
   underlying_protocol = protocol;
-  //PORT uOledLib ssd1306 initializatrion
   
-  // Turn display off
-  uint8_t command1[] = {SSD1306_DISPLAY_OFF};
-  ssd1306_send_command(command1, sizeof(command1));
+  uint8_t displayOffCommand[] = {SSD1306_DISPLAY_OFF, 0x00};
+  ssd1306_send_command(displayOffCommand, sizeof(displayOffCommand));
 
-  // Set memory addressing mode to horizontal
-  uint8_t command2[] = {SSD1306_MEMORY_ADDR_MODE, 0x00};
-  ssd1306_send_command(command2, sizeof(command2));
+  uint8_t displayClockDivRatioCommand[] = {SSD1306_SET_DISPLAY_CLOCK_DIV_RATIO, 0x80};
+  ssd1306_send_command(displayClockDivRatioCommand, sizeof(displayClockDivRatioCommand));
 
-  // Set display start line to 0
-  uint8_t command3[] = {SSD1306_SET_START_LINE, 0x00};
-  ssd1306_send_command(command3, sizeof(command3));
+  uint8_t multiplexRatioCommand[] = {SSD1306_SET_MULTIPLEX_RATIO, 0x3F};
+  ssd1306_send_command(multiplexRatioCommand, sizeof(multiplexRatioCommand));
 
-  // // Set segment re-map to column 127
-  // uint8_t command4[] = {};
-  // ssd1306_send_command(command4, sizeof(command4));
+  uint8_t displayOffsetCommand[] = {SSD1306_SET_DISPLAY_OFFSET, 0x00};
+  ssd1306_send_command(displayOffsetCommand, sizeof(displayOffsetCommand));
 
-  // Set COM output scan direction to normal
-  uint8_t command5[] = {SSD1306_COM_SCAN_DIR_INC};
-  ssd1306_send_command(command5, sizeof(command5));
+  uint8_t startLineCommand[] = {SSD1306_SET_START_LINE | 0x00, 0x00};
+  ssd1306_send_command(startLineCommand, sizeof(startLineCommand));
 
-  // Set COM pins hardware configuration to alternative
-  uint8_t command6[] = {SSD1306_SET_COM_PINS, 0x12};
-  ssd1306_send_command(command6, sizeof(command6));
+  uint8_t chargePumpCommand[] = {SSD1306_CHARGE_PUMP, 0x14};
+  ssd1306_send_command(chargePumpCommand, sizeof(chargePumpCommand));
 
-  // Set display clock divide ratio/oscillator frequency
-  uint8_t command7[] = {SSD1306_SET_DISPLAY_CLOCK_DIV_RATIO, 0xF0};
-  ssd1306_send_command(command7, sizeof(command7));
+  uint8_t addrModeCommand[] = {SSD1306_MEMORY_ADDR_MODE, 0x00};
+  ssd1306_send_command(addrModeCommand, sizeof(addrModeCommand));
 
-  // Set pre-charge period
-  uint8_t command8[] = {SSD1306_SET_PRECHARGE_PERIOD, 0x22};
-  ssd1306_send_command(command8, sizeof(command8));
+  uint8_t segmentRemapCommand[] = {SSD1306_SET_SEGMENT_REMAP | 0x01, 0x00};
+  ssd1306_send_command(segmentRemapCommand, sizeof(segmentRemapCommand));
 
-  // Set VCOMH deselect level
-  uint8_t command9[] = {SSD1306_SET_VCOM_DESELECT, 0x20};
-  ssd1306_send_command(command9, sizeof(command9));
+  uint8_t comScanDirCommand[] = {SSD1306_COM_SCAN_DIR_DEC, 0x00};
+  ssd1306_send_command(comScanDirCommand, sizeof(comScanDirCommand));
 
-  // Set display mode to normal
-  uint8_t command10[] = {SSD1306_NORMAL_DISPLAY};
-  ssd1306_send_command(command10, sizeof(command10));
+  uint8_t comPinsCommand[] = {SSD1306_SET_COM_PINS, 0x12};
+  ssd1306_send_command(comPinsCommand, sizeof(comPinsCommand));
 
-  // Set contrast control
-  uint8_t command11[] = {SSD1306_SET_CONTRAST_CONTROL, 0xCF};
-  ssd1306_send_command(command11, sizeof(command11));
+  uint8_t contrastControlCommand[] = {SSD1306_SET_CONTRAST_CONTROL, 0xCF};
+  ssd1306_send_command(contrastControlCommand, sizeof(contrastControlCommand));
 
-  // Turn display on
-  uint8_t command12[] = {SSD1306_DISPLAY_ON};
-  ssd1306_send_command(command12, sizeof(command12));
-  
-  //THIS IS AFTER INITIALIZATION (ON DISPLAY ON)
-  // Reset page addr (0 to 7 page mode)
-  uint8_t command13[] = {SSD1306_SET_PAGE_ADDR, 0, 7};
-  ssd1306_send_command(command13, sizeof(command13));
+  uint8_t prechargePeriodCommand[] = {SSD1306_SET_PRECHARGE_PERIOD, 0xF1};
+  ssd1306_send_command(prechargePeriodCommand, sizeof(prechargePeriodCommand));
 
-  // Reset page colum (0 to 127 colum mode)
-  uint8_t command14[] = {SSD1306_SET_COLUMN_ADDR, 0, 127};
-  ssd1306_send_command(command14, sizeof(command14));
+  uint8_t vcomDeselectCommand[] = {SSD1306_SET_VCOM_DESELECT, 0x40};
+  ssd1306_send_command(vcomDeselectCommand, sizeof(vcomDeselectCommand));
+
+  uint8_t displayAllOnResumeCommand[] = {SSD1306_DISPLAY_ALL_ON_RESUME, 0x00};
+  ssd1306_send_command(displayAllOnResumeCommand, sizeof(displayAllOnResumeCommand));
+
+  uint8_t normalDisplayCommand[] = {SSD1306_NORMAL_DISPLAY, 0x00};
+  ssd1306_send_command(normalDisplayCommand, sizeof(normalDisplayCommand));
+
+  uint8_t deactivateScrollCommand[] = {SSD1306_DEACTIVATE_SCROLL, 0x00};
+  ssd1306_send_command(deactivateScrollCommand, sizeof(deactivateScrollCommand));
+
+  uint8_t displayOnCommand[] = {SSD1306_DISPLAY_ON, 0x00};
+  ssd1306_send_command(displayOnCommand, sizeof(displayOnCommand));
 }
 
 void ssd1306_dispose(void)

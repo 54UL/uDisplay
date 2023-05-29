@@ -1,6 +1,11 @@
 #ifndef U_DISPLAY_API_H
 #define U_DISPLAY_API_H
 
+/* MAIN TODO CODE WALL
+* ADD ENUM TO DEFINE BUILT DISPLAY COMMANDS (THIS FOR THE DISPLAY DRIVER MODULE) 
+
+*/
+
 //GENERIC INCLUDES
 #include <stdint.h>
 
@@ -34,7 +39,7 @@ typedef struct
 typedef struct 
 {
   uDPixelFormat colorFormat;
-  uint8_t * pallete; // EJ  pallete = [BYTE1,BYTE2,BYTE3,BYTE4], the format determines how is it interpreted the aray
+  uint8_t * colorData; // EJ  colorData = [R_BYTE1, G_BYTE2, B_BYTE3, A_BYTE4], the format determines how is it interpreted the aray
 } uDColor;
 
 //INTERFACES
@@ -49,8 +54,9 @@ typedef struct
 typedef struct 
 {
   void (*Init)(uDisplayUnderlyingProtocol *protocol);
-  void (*SendCommand)(uint8_t* command, uint16_t len);
+  void (*SendCommand)(uint8_t* command, uint8_t len);
   void (*SendData)(uint8_t* data, uint8_t len);
+  void (*SendDataByte)(uint8_t data);
   void (*Dispose)(void);
 } uDisplayDriver;
 
@@ -71,6 +77,7 @@ typedef struct
   void (*ClearRegion)(uDRect* region);
   void (*ResetOrigin)(void);
   void (*Origin)(uDRect* origin);
+  void (*SetFont)(const uDBufferDescriptor * data);
   //UDisplay base interface and "engine" drawing functions
   void (*DrawPixel)(uint8_t x, uint8_t y, uDColor * color);
   void (*DrawBuffer)(uDBufferDescriptor buffer);

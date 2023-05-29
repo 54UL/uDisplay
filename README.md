@@ -9,16 +9,50 @@ ________________________________________________
 * Lightweight/Portable implementation using only C and CMake
 * Buffer-less rendering (main library goal)
 * Generated header only library 
-* I2C and SPI Hardware/Software implementations
+* I2C and SPI hardware/software implementations
 
 ## Example
 
-* How to run the program
-* Step-by-step bullets
+* Initialze uDisplay
+```c
+//Configures uDisplay renderer with software 
+uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver };
 
+//Configures the underlying comunication ports and address (0x78) in this case
+uDisplay_UnderlyingProtocol_I2C_Software.configure(0x78);
+
+//Configures uDisplay rendering
+uDisplayRenderer.Initialize(&config);
 ```
-code blocks for commands
+
+* Text rendering example
+
+```c
+//Set font data
+uDBufferDescriptor testFont;
+testFont.data = uD_DefaultFont;
+testFont.dataLenght = sizeof(uD_DefaultFont);
+fontMeta.height = 8; // 8 bits tall font
+testFont.width = 5; //  5 bits wide font
+
+//Set as current font
+uDisplayRenderer.SetFont(&testFont);
+
+//Draws an string
+uDisplayRenderer.DrawString("uDisplay:");
+
+//Draws all font characters
+uint8_t charIndex = 32;
+const uint8_t fontLenght = sizeof(uD_DefaultFont) / testFont.width;
+for (; charIndex < fontLenght; charIndex++)
+{
+  uDisplayRenderer.DrawChar(charIndex);
+}
 ```
+
+#### Running example on attiny85
+![running_example](images/fonts_v0.5-wip.png)
+* Check uDisplayTest.c for more detailed examples
 
 ## Getting Started
 
@@ -33,9 +67,6 @@ set(ARCH "AVR")
 * avr-gnu toolchain
 * avrdude
 
-```bash
-sudo apt-get install avr-libc avrdude gcc-avr binutils-avr gdb-avr
-```
 #### Ubuntu:
 
 ```bash
@@ -47,28 +78,41 @@ sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude
 * [See installation guide for pic]() 
 
 
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
+## Library development states
+* TODO
+  - Needs to be done lol
+
+* WIP
+  - work in progress...
+
+* FUNCTIONAL
+  - Has minimal functionality
+  - Barely functional
+
+* WOP: WORKING ON PLATFORM
+  - Stable code from some specific platform
+
+* RELEASE
+  - Stable code
+  - Works on all devices and architectures...
+
 ## uDisplay drivers
 
-| DISPLAY CONTROLLER| ARCH  | STATUS       |
-|-------------------|-------|--------------|
-| SSD1306           | I2C   | WIP          |
-| ST7789            | SPI   | WIP          |
-| ST7735R           | SPI   | WIP          |
+| DISPLAY CONTROLLER| PROTOCOL  | STATUS       |
+|-------------------|-----------|--------------|
+| SSD1306           | I2C       | FUNCTIONAL   |
+| ST7789            | SPI       | TODO         |
+| ST7735R           | SPI       | TODO         |
 
 ## uDisplay MCU compatibility
 
 | MCU             | ARCH  | STATUS       |
 |-----------------|-------|--------------|
-| ATmega328P      | AVR   | DEVELOPMENT  |
-| ATTiny85        | AVR   | DEVELOPMENT  |
-| AT89S52         | 8051  | DEVELOPMENT  |
-| PIC16F877A      | PIC   | DEVELOPMENT  |
-| STM32F103C8T6   | ARM   | DEVELOPMENT  |
+| ATmega328P      | AVR   | TODO         |
+| ATTiny85        | AVR   | FUNCTIONAL   |
+| AT89S52         | 8051  | TODO         |
+| PIC16F877A      | PIC   | TODO         |
+| STM32F103C8T6   | ARM   | TODO         |
 
 ## uDisplay road map
 
@@ -111,8 +155,8 @@ code blocks for commands
     - Harware implementation using timmers and interrupts
 
 ## Authors and 
-
-- xul (54UL)
+* Repo owner
+* Add you if are an author...
 
 ## Resources used to implement uDisplay (REFERENCES)
 - [AVR Optimization tips and tricks] (https://ww1.microchip.com/downloads/en/AppNotes/doc8453.pdf)

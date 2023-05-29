@@ -91,12 +91,7 @@ uint8_t index;
 
 void uOLED_DrawString(const char *string)
 {
-    index = 0;
-    while (string[index])
-    {
-        uOLED_Putchar(string[index]);
-        index++;
-    }
+   
 }
 
 unsigned int spriteIndex;
