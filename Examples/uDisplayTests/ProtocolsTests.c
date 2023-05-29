@@ -14,23 +14,23 @@ const static uint8_t example_buffer[] = {0XAA, 0XBB, 0XCC};
 // SSD1306 AND I2C_TEST BED CHECKERS BIT()
 static inline void SSD1306_I2C_HARDWARE_AVR_TEST()
 {
-    //Configures the underlying comunication ports and address (0x3c) in this case
-    uDisplay_UnderlyingProtocol_I2C.configure(0x78);
-    //Initialize the driver (internal initialization)
-    uDisplay_UnderlyingProtocol_I2C.init();
-    //Send the buffer via hardware I2C and you must recive this sequence {0XFF, 0XAA, 0XBB, 0XCC}
-    uDisplay_UnderlyingProtocol_I2C.write(0xFF, example_buffer, sizeof(example_buffer));
+   //Configures the underlying comunication ports and address (0x3c) in this case
+   uDisplay_UnderlyingProtocol_I2C.configure(0x78);
+   //Initialize the driver (internal initialization)
+   uDisplay_UnderlyingProtocol_I2C.init();
+   //Send the buffer via hardware I2C and you must recive this sequence {0XFF, 0XAA, 0XBB, 0XCC}
+   uDisplay_UnderlyingProtocol_I2C.write(0xFF, example_buffer, sizeof(example_buffer));
 }
 
 // SSD1306 AND I2C_TEST BED CHECKERS BIT()
 static inline void SSD1306_I2C_SOFTWARE_AVR_TEST()
 {
-    //Configures the underlying comunication ports and address (0x3c) in this case
-    uDisplay_UnderlyingProtocol_I2C_Software.configure(0x78);
-    //Initialize the driver (internal initialization)
-    uDisplay_UnderlyingProtocol_I2C_Software.init();
-    //Send data via software I2C and you must recive this sequence {0XFF, 0XAA, 0XBB, 0XCC}
-    uDisplay_UnderlyingProtocol_I2C.write(0xFF, example_buffer, sizeof(example_buffer));
+   //Configures the underlying comunication ports and address (0x3c) in this case
+   uDisplay_UnderlyingProtocol_I2C_Software.configure(0x78);
+   //Initialize the driver (internal initialization)
+   uDisplay_UnderlyingProtocol_I2C_Software.init();
+   //Send data via software I2C and you must recive this sequence {0XFF, 0XAA, 0XBB, 0XCC}
+   uDisplay_UnderlyingProtocol_I2C.write(0xFF, example_buffer, sizeof(example_buffer));
 }
 
 void main()

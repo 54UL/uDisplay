@@ -1,6 +1,9 @@
 #ifndef UD_DRIVERS_H
 #define UD_DRIVERS_H
 
+//TODO: ADD A FUNCTION TO CALL ALMOST EVERY BUILT IN COMMAND FROM HERE
+//PROPOSAL: Call(BUILT_IN_ENUM_TYPE type, uint8_t payload, payloadLen);
+
 #include "../uD_Api.h"
 #include "uD_SSD1306_Driver.h"
 // #include "uD_ST7789_Driver.h"

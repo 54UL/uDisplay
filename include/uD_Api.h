@@ -54,8 +54,9 @@ typedef struct
 typedef struct 
 {
   void (*Init)(uDisplayUnderlyingProtocol *protocol);
-  void (*SendCommand)(uint8_t* command, uint16_t len);
+  void (*SendCommand)(uint8_t* command, uint8_t len);
   void (*SendData)(uint8_t* data, uint8_t len);
+  void (*SendDataByte)(uint8_t data);
   void (*Dispose)(void);
 } uDisplayDriver;
 
@@ -76,6 +77,7 @@ typedef struct
   void (*ClearRegion)(uDRect* region);
   void (*ResetOrigin)(void);
   void (*Origin)(uDRect* origin);
+  void (*SetFont)(const uint8_t* origin);
   //UDisplay base interface and "engine" drawing functions
   void (*DrawPixel)(uint8_t x, uint8_t y, uDColor * color);
   void (*DrawBuffer)(uDBufferDescriptor buffer);

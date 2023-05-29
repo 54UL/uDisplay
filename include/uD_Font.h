@@ -1,7 +1,8 @@
 #ifndef UD_FONT_H
 #define UD_FONT_H
 
-#include <cstdint.h>
+#include <stdint.h>
+#include <avr/pgmspace.h>
 
 //test define
 #define OLED_LOAD_DEFAULT_FONT
@@ -14,7 +15,7 @@
 #if defined(OLED_LOAD_DEFAULT_FONT)
 
  //6 x 8 @ 94 characters (default font)
- const uint8_t MEMORY_KEYWORD uD_DefaultFont[] = 
+ const uint8_t MEMORY_KEYWORD uD_DefaultFont[] PROGMEM  = 
  {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // sp
     0x00, 0x00, 0x00, 0x2f, 0x00, 0x00, // !
