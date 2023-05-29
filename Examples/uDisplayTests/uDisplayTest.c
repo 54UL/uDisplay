@@ -1,3 +1,5 @@
+//MAIN PROJECT TEST CODE (START HERE...)
+
 //uDisplay config
 #define F_CPU 8000000UL
 #define SCREEN_WIDTH 128
@@ -15,8 +17,8 @@
 #include "../../include/Helpers/uD_Delay.h"
 
 
-// Initializes a ssd1306 (i2c_software) uDisplay base renderer
-static inline void uDisplay_DrawStringRenderTest()
+//Minimal code to initalize the library with software impl
+static inline void InitializeSystem()
 {
    //Configures uDisplay renderer
    uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver };
@@ -30,24 +32,52 @@ static inline void uDisplay_DrawStringRenderTest()
 
    //Configures uDisplay rendering
    uDisplayRenderer.Initialize(&config);
-   uDisplayRenderer.SetFont(uD_DefaultFont);
+}
 
-   //Renders an string 
+//Basic font rendering 
+static inline void FontRenderingTest()
+{
+   //Set font data
+   uDBufferDescriptor testFont;
+   testFont.data = uD_DefaultFont;
+   testFont.dataLenght = sizeof(uD_DefaultFont);
+
+   // fontMeta.height = 8;   //this is assume to be 8 bits
+   testFont.width = 5; // 5 or 6 deppends on the selected font
+   uDisplayRenderer.SetFont(&testFont);
+
    uDisplayRenderer.DrawString("uDisplay:");
-
    //Renders all font characters
    uint8_t charIndex = 32;
-   const uint8_t fontLenght = sizeof(uD_DefaultFont) / 6;
+   const uint8_t fontLenght = sizeof(uD_DefaultFont) / testFont.width;
    for (; charIndex < fontLenght; charIndex++)
    {
       uDisplayRenderer.DrawChar(charIndex);
    }
 }
 
+//Draw pixel test
+static inline void DrawPixelTest()
+{
+   //Renders an string 
+   uDColor color;
+   uDisplayRenderer.DrawPixel(128,64, &color);
+}
+
+//Animation test
+static inline void AnimationTest()
+{
+   //Rendering with pre-clean draw, page and colums addresing aka buffer less rendering???
+   //Add bouncing ball rendering code...
+}
+
 
 void main()
 {
-   uDisplay_DrawStringRenderTest();
+   InitializeSystem();
+   FontRenderingTest(); 
+   //DrawPixelTest();//todo WORKS BUT STRANGE...
+
    //infinite loop to prevent reboots
    while(1);
 }

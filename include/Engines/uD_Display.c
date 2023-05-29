@@ -4,9 +4,9 @@
 // IMPLEMENT RENDERING QUEUE
 // THUS TO DISCARD OUT OF TIME FRAMES.
 // IF FRAME BUFFER AVAILIBLE, THE RENDER QUEUE HAS TO SAVE ALL RENDERING METHODS TO THE DISPATCH BUFFER, THEN WHEN CALLING COMMIT SEND ALL THIS DATA...
-static uDisplayDriver *underlyingDriver;
-static uDRect * s_currentOrigin;
-static const uint8_t* s_currentFont;
+static uDisplayDriver*      underlyingDriver;
+static uDRect*              s_currentOrigin;
+static uDBufferDescriptor*  s_currentFont;
 
 // uDisplay control methods                        ==================================================================================
 void uDisplay_Initialize(uDRenderConfig *config)
@@ -43,8 +43,8 @@ void uDisplay_Clear(void)
   {
     underlyingDriver->SendData(&clearPayload, 1);
   }
-  uDisplay_ResetOrigin();
 
+  uDisplay_ResetOrigin();
 }
 
 void uDisplay_ClearRegion(uDRect *region)
@@ -68,9 +68,9 @@ void uDisplay_SetOrigin(uDRect *origin)
   //TODO: IMPLEMENT AT DRIVER LAYER THE FUNCTION void uOLED_gotoxy(void)
 }
 
-void uDisplay_SetFont(const uint8_t * fontArray)
+void uDisplay_SetFont(const uDBufferDescriptor * data)
 {
-  s_currentFont = fontArray;
+  s_currentFont = data;
   //TODO: IMPLEMENT AT DRIVER LAYER THE FUNCTION void uOLED_gotoxy(void)
 }
 
@@ -106,14 +106,13 @@ void uDisplay_DrawBuffer(uDBufferDescriptor buffer)
 void uDisplay_DrawChar(char character)
 {
   static uint16_t charFontStart;
-  static uint8_t gylphIndex;
-
-  charFontStart = (((uint8_t)character - 32) * 6) + 1;
-  gylphIndex = 0;
-  for (gylphIndex = 0; gylphIndex < 6; gylphIndex++)
-  { 
-      uint8_t readedVal = pgm_read_word (&s_currentFont[charFontStart + gylphIndex]);
-      underlyingDriver->SendData(&readedVal, 1);
+  static uint8_t gylphIndex = 0;
+  
+  charFontStart = (((uint8_t)character - 32) * s_currentFont->width); //32 of ascii character offset * width + 1 byte (zero index correction?)
+  for (gylphIndex = 0; gylphIndex < s_currentFont->width; gylphIndex++)
+  {
+    uint8_t readedVal = pgm_read_word (&s_currentFont->data[charFontStart + gylphIndex]);
+    underlyingDriver->SendData(&readedVal, 1);
   }
 }
 

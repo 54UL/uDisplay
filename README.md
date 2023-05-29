@@ -3,6 +3,7 @@
 2D Display controller library for low spec MCU'S
 ________________________________________________
 
+
 ### Key features
 
 * Intented to run on many embbed c compilers
@@ -13,12 +14,50 @@ ________________________________________________
 
 ## Example
 
-* How to run the program
-* Step-by-step bullets
+* Initialze uDisplay
+```c
+//Configures uDisplay renderer with software 
+uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver };
 
+//Configures the underlying comunication ports and address (0x78) in this case
+uDisplay_UnderlyingProtocol_I2C_Software.configure(0x78);
+
+//Initialize the driver (internal initialization)
+uDisplay_UnderlyingProtocol_I2C_Software.init();
+uDisplay_SSD1306Driver.Init(&uDisplay_UnderlyingProtocol_I2C_Software);
+
+//Configures uDisplay rendering
+uDisplayRenderer.Initialize(&config);
 ```
-code blocks for commands
+
+* Text rendering example
+
+```c
+//Set font data
+uDBufferDescriptor testFont;
+testFont.data = uD_DefaultFont;
+testFont.dataLenght = sizeof(uD_DefaultFont);
+fontMeta.height = 8; // 8 bits tall font
+testFont.width = 5; //  5 bits wide font
+
+//Set as current font
+uDisplayRenderer.SetFont(&testFont);
+
+//Draws an string
+uDisplayRenderer.DrawString("uDisplay:");
+
+//Draws all font characters
+uint8_t charIndex = 32;
+const uint8_t fontLenght = sizeof(uD_DefaultFont) / testFont.width;
+for (; charIndex < fontLenght; charIndex++)
+{
+  uDisplayRenderer.DrawChar(charIndex);
+}
 ```
+
+#### Running example on attiny85
+![running_example](images/fonts_v0.5-wip.png)
+* Check uDisplayTest.c for more detailed examples
 
 ## Getting Started
 

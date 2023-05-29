@@ -77,7 +77,7 @@ typedef struct
   void (*ClearRegion)(uDRect* region);
   void (*ResetOrigin)(void);
   void (*Origin)(uDRect* origin);
-  void (*SetFont)(const uint8_t* origin);
+  void (*SetFont)(const uDBufferDescriptor * data);
   //UDisplay base interface and "engine" drawing functions
   void (*DrawPixel)(uint8_t x, uint8_t y, uDColor * color);
   void (*DrawBuffer)(uDBufferDescriptor buffer);
