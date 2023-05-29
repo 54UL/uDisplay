@@ -5,6 +5,7 @@
 
 #include <math.h>
 #include <avr/io.h>
+#include <stdio.h>
 
 #include "../../include/Drivers/Protocols/uD_Protocols.h"
 #include "../../include/uD_Font.h"
@@ -17,15 +18,15 @@
 // Initializes a ssd1306 (i2c_software) uDisplay base renderer
 static inline void uDisplay_DrawStringRenderTest()
 {
+   //Configures uDisplay renderer
+   uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver };
+
    //Configures the underlying comunication ports and address (0x78) in this case
    uDisplay_UnderlyingProtocol_I2C_Software.configure(0x78);
 
    //Initialize the driver (internal initialization)
    uDisplay_UnderlyingProtocol_I2C_Software.init();
-
    uDisplay_SSD1306Driver.Init(&uDisplay_UnderlyingProtocol_I2C_Software);
-   //Confugures uDisplay renderer
-   uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver };
 
    //Configures uDisplay rendering
    uDisplayRenderer.Initialize(&config);
@@ -34,6 +35,7 @@ static inline void uDisplay_DrawStringRenderTest()
    //Renders an string 
    uDisplayRenderer.DrawString("uDisplay:");
 
+   //Renders all font characters
    uint8_t charIndex = 32;
    const uint8_t fontLenght = sizeof(uD_DefaultFont) / 6;
    for (; charIndex < fontLenght; charIndex++)
