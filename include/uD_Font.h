@@ -4,8 +4,12 @@
 
 #include <stdint.h>
 #include <avr/pgmspace.h>
+#include "uD_Api.h"
 
-//test defines
+//TODO: ADD THESE DEFINES TO THE DOC 
+//DOCUMENT HOW TO CREATE CUSTOM FONTS
+//BDF > TO C ARRAY EXAMPLE
+
 // #define UDISPLAY_USE_DEFAULT_FONT
 #define UDISPLAY_USE_X_ORG_FONT
 
@@ -16,7 +20,7 @@
 
 #if defined(UDISPLAY_LOAD_DEFAULT_FONT)
  //6 x 8 @ 94 characters (default font)
- const uint8_t MEMORY_KEYWORD uD_DefaultFont[] PROGMEM  = 
+ const uint8_t MEMORY_KEYWORD uD_DefaultFontRawData[] PROGMEM  = 
  {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // sp
     0x00, 0x00, 0x00, 0x2f, 0x00, 0x00, // !
@@ -114,11 +118,20 @@
     0x00, 0x00, 0x82, 0x7C, 0x10, 0x00, // }
     0x00, 0x00, 0x06, 0x09, 0x09, 0x06  // ~
 };
+
+const uDFontDescriptor uD_DefaultFont =
+{
+    .data = uD_DefaultFontRawData,
+    .dataLength = sizeof(uD_DefaultFontRawData),
+    .width = 6,
+    .height = 8
+};
+
 #elif defined (UDISPLAY_USE_X_ORG_FONT)
 
  //https://gitlab.freedesktop.org/xorg/font/misc-misc/-/blob/master/5x8.bdf
  // 5 x 8 @ 126 characters (default font)
- const uint8_t MEMORY_KEYWORD uD_DefaultFont[] PROGMEM = 
+ const uint8_t MEMORY_KEYWORD uD_DefaultFontRawData[] PROGMEM = 
  {
   0x00, 0x00, 0x00, 0x00, 0x00,  // Code for char ' ' (32)
   0x00, 0x00, 0x4f, 0x00, 0x00,  // Code for char '!' (33)
@@ -217,8 +230,16 @@
   0x10, 0x08, 0x08, 0x10, 0x08,  // Code for char '~' (126)
 };
 
+const uDFontDescriptor uD_DefaultFont =
+{
+    .data = uD_DefaultFontRawData,
+    .dataLenght = sizeof(uD_DefaultFontRawData),
+    .width = 5,
+    .height = 8
+};
+
 #else
-    const uint8_t * DefaultFont;
+    const uint8_t * uD_DefaultFontRawData;
 #endif
 
 #endif /* UD_FONT_H */

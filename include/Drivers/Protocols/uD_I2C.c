@@ -2,10 +2,9 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-// THIS IS ATtiny85 IMPL
-static uint8_t current_i2c_address;
+//NOTE: THIS IS BASED ONLY ON THE ATTINY HARDWARE
 
-#define I2C_FREQ 400000
+static uint8_t current_i2c_address;
 
 void i2c_init(uint8_t address)
 {

@@ -34,8 +34,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 OLED_LOAD_DEFAULT_FONT : LOADS THE DEFAULT FONT GYLPHS IN PROGRAM MEMORY
 USE_I2C_SOFTWARE_IMPLEMENTATION
 USE_DELAY_SOFTWARE_IMPLEMENTATION: ENABLES THE USE OF SOFTWARE DELAY BY PROVIDING EXTRA INFO ABOUT THE INSTRUCTION CYCLE TIMES
-SDA_PIN : const int of the pin bit of sda 
-SCL_PIN: const int of the pin bit of sda
+UD_I2C_SDA_PIN : const int of the pin bit of sda 
+UD_I2C_SCL_PIN: const int of the pin bit of sda
 I2C_PORT: PORT WHERE I2C PINS RESIDES
 */
 
@@ -251,12 +251,12 @@ void I2C_MasterInit()
     TRISC4 = 1;
 #elif defined(__C51__) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     // SOFTWARE IMPLEMENTATION
-    SCL_PIN = 1;
-    SDA_PIN = 1;
+    UD_I2C_SCL_PIN = 1;
+    UD_I2C_SDA_PIN = 1;
 #elif defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
-    // I2C_TRIS   &= ~((1 << SDA_PIN) | (1 << SCL_PIN)); //make as inputs scl and sda
-    // I2C_PORT |= (1 << SDA_PIN);
-    // I2C_PORT |= (1 << SCL_PIN);
+    // I2C_TRIS   &= ~((1 << UD_I2C_SDA_PIN) | (1 << UD_I2C_SCL_PIN)); //make as inputs scl and sda
+    // I2C_PORT |= (1 << UD_I2C_SDA_PIN);
+    // I2C_PORT |= (1 << UD_I2C_SCL_PIN);
 #endif
 }
 
@@ -266,16 +266,16 @@ void I2C_MasterWait()
     while ((SSPSTAT & 0x04) || (SSPCON2 & 0x1F))
         ;
 #elif defined(__C51__) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
-    SCL_PIN = 1;
+    UD_I2C_SCL_PIN = 1;
     Timing_BlockingDelay_ms(1);
-    while (!SCL_PIN)
+    while (!UD_I2C_SCL_PIN)
         ;
 #elif defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
-    I2C_TRIS   |= (1 << SCL_PIN); //make as outputs scl and sda
-    I2C_PORT |= (1 << SCL_PIN);
+    I2C_TRIS   |= (1 << UD_I2C_SCL_PIN); //make as outputs scl and sda
+    I2C_PORT |= (1 << UD_I2C_SCL_PIN);
     Timing_BlockingDelay_ms(1);
-    I2C_TRIS   &= ~(1 << SCL_PIN); //make as input SCL BIT
-    while (!(I2C_PORT >> SCL_PIN) & 1);
+    I2C_TRIS   &= ~(1 << UD_I2C_SCL_PIN); //make as input SCL BIT
+    while (!(I2C_PORT >> UD_I2C_SCL_PIN) & 1);
 #endif
 }
 
@@ -286,18 +286,18 @@ void I2C_MasterStart()
     SEN = 1; //Initiate start condition
 #elif defined(__C51__) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     // SOFTWARE IMPLEMENTATION
-    SCL_PIN = 1;
-    SDA_PIN = 1;
+    UD_I2C_SCL_PIN = 1;
+    UD_I2C_SDA_PIN = 1;
     Timing_BlockingDelay_ms(1);
-    SDA_PIN = 0;
+    UD_I2C_SDA_PIN = 0;
 #elif defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
-    I2C_TRIS   &= ~((1 << SDA_PIN) | (1 << SCL_PIN)); //make as inputs scl and sda
-    I2C_TRIS   |= (1 << SDA_PIN) | (1 << SCL_PIN); //make as outputs scl and sda
+    I2C_TRIS   &= ~((1 << UD_I2C_SDA_PIN) | (1 << UD_I2C_SCL_PIN)); //make as inputs scl and sda
+    I2C_TRIS   |= (1 << UD_I2C_SDA_PIN) | (1 << UD_I2C_SCL_PIN); //make as outputs scl and sda
 
-    I2C_PORT |= (1 << SCL_PIN);
-    I2C_PORT |= (1 << SDA_PIN);
+    I2C_PORT |= (1 << UD_I2C_SCL_PIN);
+    I2C_PORT |= (1 << UD_I2C_SDA_PIN);
     Timing_BlockingDelay_ms(1);
-    I2C_PORT &= ~(1 << SDA_PIN);
+    I2C_PORT &= ~(1 << UD_I2C_SDA_PIN);
 #endif
 }
 
@@ -319,16 +319,16 @@ void I2C_MasterStop()
     I2C_MasterWait();
     PEN = 1;
 #elif defined(__C51__) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
-    SCL_PIN = 0;
-    SDA_PIN = 0;
-    SCL_PIN = 1;
-    SDA_PIN = 1;
+    UD_I2C_SCL_PIN = 0;
+    UD_I2C_SDA_PIN = 0;
+    UD_I2C_SCL_PIN = 1;
+    UD_I2C_SDA_PIN = 1;
 #elif defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
-    I2C_TRIS   |= (1 << SDA_PIN) | (1 << SCL_PIN); //make as outputs scl and sda
-    I2C_PORT &= ~(1 << SCL_PIN);
-    I2C_PORT &= ~(1 << SDA_PIN);
-    I2C_PORT |= (1 << SCL_PIN);
-    I2C_PORT |= (1 << SDA_PIN);
+    I2C_TRIS   |= (1 << UD_I2C_SDA_PIN) | (1 << UD_I2C_SCL_PIN); //make as outputs scl and sda
+    I2C_PORT &= ~(1 << UD_I2C_SCL_PIN);
+    I2C_PORT &= ~(1 << UD_I2C_SDA_PIN);
+    I2C_PORT |= (1 << UD_I2C_SCL_PIN);
+    I2C_PORT |= (1 << UD_I2C_SDA_PIN);
 #endif
 }
 
@@ -344,52 +344,52 @@ uint8_t timeout;
     timeout = 0;
     for (serial_buff_oled = 0; serial_buff_oled < 8; serial_buff_oled++)
     {
-        SCL_PIN = 0;
+        UD_I2C_SCL_PIN = 0;
         if (d & (0x80 >> serial_buff_oled))
-            SDA_PIN = 1;
+            UD_I2C_SDA_PIN = 1;
         else
-            SDA_PIN = 0;
-        SCL_PIN = 1;
+            UD_I2C_SDA_PIN = 0;
+        UD_I2C_SCL_PIN = 1;
     }
     //Aknowledge
-    SCL_PIN = 0;
-    SCL_PIN = 1;
+    UD_I2C_SCL_PIN = 0;
+    UD_I2C_SCL_PIN = 1;
     while (timeout < 254)
     {
-        if (!SCL_PIN)
-            while (SCL_PIN) //perame men estoy ocpado(bussy)
+        if (!UD_I2C_SCL_PIN)
+            while (UD_I2C_SCL_PIN) //perame men estoy ocpado(bussy)
 
-                if (!SDA_PIN)
+                if (!UD_I2C_SDA_PIN)
                     break;
         timeout++;
     }
-    if (SDA_PIN)
+    if (UD_I2C_SDA_PIN)
     {
         I2C_MasterStop(); //not ack
     }
 #elif defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     timeout = 0;
-    I2C_TRIS   |= (1 << SDA_PIN) | (1 << SCL_PIN); //make as outputs scl and sda
+    I2C_TRIS   |= (1 << UD_I2C_SDA_PIN) | (1 << UD_I2C_SCL_PIN); //make as outputs scl and sda
     for (serial_buff_oled = 0; serial_buff_oled < 8; serial_buff_oled++)
     {
-        I2C_PORT &= ~(1 << SCL_PIN);
+        I2C_PORT &= ~(1 << UD_I2C_SCL_PIN);
         if (d & (0x80 >> serial_buff_oled))
-            I2C_PORT |= (1 << SDA_PIN);
+            I2C_PORT |= (1 << UD_I2C_SDA_PIN);
         else
-            I2C_PORT &= ~(1 << SDA_PIN);
-        I2C_PORT |= (1 << SCL_PIN);
+            I2C_PORT &= ~(1 << UD_I2C_SDA_PIN);
+        I2C_PORT |= (1 << UD_I2C_SCL_PIN);
     }
     //Aknowledge
-    I2C_PORT &= ~(1 << SCL_PIN);
-    I2C_PORT |= (1 << SCL_PIN);
-    I2C_TRIS   &= ~((1 << SDA_PIN) | (1 << SCL_PIN)); //make as inputs scl and sda
+    I2C_PORT &= ~(1 << UD_I2C_SCL_PIN);
+    I2C_PORT |= (1 << UD_I2C_SCL_PIN);
+    I2C_TRIS   &= ~((1 << UD_I2C_SDA_PIN) | (1 << UD_I2C_SCL_PIN)); //make as inputs scl and sda
     while (timeout < 254)
     {
-        if (!((I2C_PORT >> SCL_PIN) & 1))
+        if (!((I2C_PORT >> UD_I2C_SCL_PIN) & 1))
         {
-            while ((I2C_PORT >> SCL_PIN) & 1) //busy
+            while ((I2C_PORT >> UD_I2C_SCL_PIN) & 1) //busy
             {
-                if (!((I2C_PORT >> SDA_PIN) & 1))
+                if (!((I2C_PORT >> UD_I2C_SDA_PIN) & 1))
                     break;
             }
         }

@@ -1,4 +1,4 @@
-## Overview
+## Overview (old backlog and reference)
 uDisplay has 5 modules: Timing, Comunications, Drivers and Rendering engines
 
 ### Timing 
@@ -27,7 +27,7 @@ uDisplay has 5 modules: Timing, Comunications, Drivers and Rendering engines
   - Open API
   - Available custom implementations via drivers interface (uD_Api.h)
 
-### Rendering engines layer
+### Rendering engines layer (TODO)
 - Uses a driver
 - 2D Rendering
   - uDisplay         (base and built-in engine with basic rendering functions)

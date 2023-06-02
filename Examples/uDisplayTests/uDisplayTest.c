@@ -1,17 +1,14 @@
 //MAIN PROJECT TEST CODE (START HERE...)
 
-//uDisplay config
+//uDisplay config (AVR)
 #define F_CPU 8000000UL
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
 
 #include <math.h>
 #include <avr/io.h>
 #include <stdio.h>
 
-#include "../../include/Drivers/Protocols/uD_Protocols.h"
 #include "../../include/uD_Font.h"
-
+#include "../../include/Drivers/Protocols/uD_Protocols.h"
 #include "../../include/Drivers/uD_Drivers.h"
 #include "../../include/Engines/uD_Engines.h"
 #include "../../include/Helpers/uD_Delay.h"
@@ -20,15 +17,8 @@
 //Minimal code to initalize the library with software impl
 static inline void InitializeSystem()
 {
-   //Configures uDisplay renderer
-   uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver };
-
-   //Configures the underlying comunication ports and address (0x78) in this case
-   uDisplay_UnderlyingProtocol_I2C_Software.configure(0x78);
-
-   //Initialize the driver (internal initialization)
-   uDisplay_UnderlyingProtocol_I2C_Software.init();
-   uDisplay_SSD1306Driver.Init(&uDisplay_UnderlyingProtocol_I2C_Software);
+   //Configures uDisplay renderer in this order: protocol/display_driver/address
+   uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver, 0x78};
 
    //Configures uDisplay rendering
    uDisplayRenderer.Initialize(&config);
@@ -37,20 +27,15 @@ static inline void InitializeSystem()
 //Basic font rendering 
 static inline void FontRenderingTest()
 {
-   //Set font data
-   uDBufferDescriptor testFont;
-   testFont.data = uD_DefaultFont;
-   testFont.dataLenght = sizeof(uD_DefaultFont);
+   //uD_DefaultFont is the built-in font descriptor
+   uDisplayRenderer.SetFont(&uD_DefaultFont);
 
-   // fontMeta.height = 8;   //this is assume to be 8 bits
-   testFont.width = 5; // 5 or 6 deppends on the selected font
-   uDisplayRenderer.SetFont(&testFont);
-
+   //This method draws an string at the current origin
    uDisplayRenderer.DrawString("uDisplay:");
-   //Renders all font characters
+   
+   //Tries to render 96 characters only
    uint8_t charIndex = 32;
-   const uint8_t fontLenght = sizeof(uD_DefaultFont) / testFont.width;
-   for (; charIndex < fontLenght; charIndex++)
+   for (; charIndex < 96; charIndex++)
    {
       uDisplayRenderer.DrawChar(charIndex);
    }
@@ -61,7 +46,7 @@ static inline void DrawPixelTest()
 {
    //Renders an string 
    uDColor color;
-   uDisplayRenderer.DrawPixel(128,64, &color);
+   uDisplayRenderer.DrawPixel(8, 8, &color);
 }
 
 //Animation test
@@ -71,12 +56,11 @@ static inline void AnimationTest()
    //Add bouncing ball rendering code...
 }
 
-
 void main()
 {
    InitializeSystem();
    FontRenderingTest(); 
-   //DrawPixelTest();//todo WORKS BUT STRANGE...
+   //DrawPixelTest(); //todo WORKS BUT STRANGE (fixme)...
 
    //infinite loop to prevent reboots
    while(1);

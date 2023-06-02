@@ -15,55 +15,42 @@ ________________________________________________
 
 * Initialze uDisplay
 ```c
-//Configures uDisplay renderer with software 
-uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver };
+static inline void Initialize()
+{
+   //Configures uDisplay renderer in this order: protocol/display_driver/address
+   uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver, 0x78};
 
-//Configures the underlying comunication ports and address (0x78) in this case
-uDisplay_UnderlyingProtocol_I2C_Software.configure(0x78);
-
-//Configures uDisplay rendering
-uDisplayRenderer.Initialize(&config);
+   //Configures uDisplay rendering
+   uDisplayRenderer.Initialize(&config);
+}
 ```
 
-* Text rendering example
+* Font rendering test
 
 ```c
-//Set font data
-uDBufferDescriptor testFont;
-testFont.data = uD_DefaultFont;
-testFont.dataLenght = sizeof(uD_DefaultFont);
-fontMeta.height = 8; // 8 bits tall font
-testFont.width = 5; //  5 bits wide font
-
-//Set as current font
-uDisplayRenderer.SetFont(&testFont);
-
-//Draws an string
-uDisplayRenderer.DrawString("uDisplay:");
-
-//Draws all font characters
-uint8_t charIndex = 32;
-const uint8_t fontLenght = sizeof(uD_DefaultFont) / testFont.width;
-for (; charIndex < fontLenght; charIndex++)
+//Basic font rendering 
+static inline void FontRenderingTest()
 {
-  uDisplayRenderer.DrawChar(charIndex);
+  //uD_DefaultFont is the built-in font descriptor
+  uDisplayRenderer.SetFont(&uD_DefaultFont);
+
+  //This method draws an string at the current origin
+  uDisplayRenderer.DrawString("uDisplay:");
+  
+  //Tries to render 96 characters (if implemented)
+  uint8_t charIndex = 32;
+  for (; charIndex < 96 *5; charIndex++)
+  {
+    uDisplayRenderer.DrawChar(charIndex);
+  }
 }
 ```
 
 #### Running example on attiny85
 ![running_example](images/fonts_v0.5-wip.png)
 * Check uDisplayTest.c for more detailed examples
-
-## Getting Started
-
-* Configure the [CMakeLists.txt]() to compile as an example or lib (genererates a .o or a only header version)
-```cmake
-set(MCU  "attiny85")
-set(ARCH "AVR")
-```
-
 ## Dependencies
-* CMake
+* cmake
 * avr-gnu toolchain
 * avrdude
 
@@ -72,12 +59,6 @@ set(ARCH "AVR")
 ```bash
 sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude
 ```
-## Installing
-
-* [See installation guide for avr]() 
-* [See installation guide for pic]() 
-
-
 ## Library development states
 * TODO
   - Needs to be done lol
@@ -156,7 +137,7 @@ sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude
 
 ## Authors and 
 * Repo owner
-* Add you if are an author...
+* You
 
 ## Resources used to implement uDisplay (REFERENCES)
 - [AVR Optimization tips and tricks] (https://ww1.microchip.com/downloads/en/AppNotes/doc8453.pdf)

@@ -6,17 +6,14 @@
 // IF FRAME BUFFER AVAILIBLE, THE RENDER QUEUE HAS TO SAVE ALL RENDERING METHODS TO THE DISPATCH BUFFER, THEN WHEN CALLING COMMIT SEND ALL THIS DATA...
 static uDisplayDriver*      underlyingDriver;
 static uDRect*              s_currentOrigin;
-static uDBufferDescriptor*  s_currentFont;
+static uDFontDescriptor*    s_currentFont;
 
 // uDisplay control methods                        ==================================================================================
 void uDisplay_Initialize(uDRenderConfig *config)
 {
-  //TODO: INITIALIZE ALL COMPONENTS FROM HERE:
-  
-  // Initialize the display driver
   underlyingDriver = config->driver;
-  // config->protocol->init(0x78);
-  // underlyingDriver->Init(config->protocol);
+  config->protocol->configure(config->deviceId);
+  underlyingDriver->Init(config->protocol);
 }
 
 void uDisplay_StartDrawCall(uDBufferDescriptor buffer)
@@ -39,7 +36,7 @@ void uDisplay_Clear(void)
   uint8_t clearPayload = 0x00;
   
   uDisplay_ResetOrigin();
-  for (; rindex < 1024 ; rindex--)//TODO: ADD screen calcualtion
+  for (; rindex < 1024 ; rindex--)//TODO: tf does even mean 1024?? fix this trash
   {
     underlyingDriver->SendData(&clearPayload, 1);
   }
@@ -49,6 +46,7 @@ void uDisplay_Clear(void)
 
 void uDisplay_ClearRegion(uDRect *region)
 {
+
 }
 
 void uDisplay_ResetOrigin(void)
@@ -68,7 +66,7 @@ void uDisplay_SetOrigin(uDRect *origin)
   //TODO: IMPLEMENT AT DRIVER LAYER THE FUNCTION void uOLED_gotoxy(void)
 }
 
-void uDisplay_SetFont(const uDBufferDescriptor * data)
+void uDisplay_SetFont(const uDFontDescriptor * data)
 {
   s_currentFont = data;
   //TODO: IMPLEMENT AT DRIVER LAYER THE FUNCTION void uOLED_gotoxy(void)
@@ -87,9 +85,11 @@ void uDisplay_DrawPixel(uint8_t x, uint8_t y, uDColor *color)
 
   // Send the data to set the pixel color
   uint8_t data[] = {1 << (y % 8)};
-  if (color == 0) {
+  if (color == 0) 
+  {
     data[0] = 0;
   }
+
   underlyingDriver->SendData(data, sizeof(data));
 }
 
@@ -105,14 +105,15 @@ void uDisplay_DrawBuffer(uDBufferDescriptor buffer)
 
 void uDisplay_DrawChar(char character)
 {
-  static uint16_t charFontStart;
+  const uint16_t charFontStart = (((uint8_t) character - 32) * s_currentFont->width); //32 of ascii character offset * width + 1 byte (zero index correction?)
   static uint8_t gylphIndex = 0;
   
-  charFontStart = (((uint8_t)character - 32) * s_currentFont->width); //32 of ascii character offset * width + 1 byte (zero index correction?)
+  //TODO: OPTIMIZE THIS USING ONLY SEND DATA FUNCTION (REMOVE OVERHEAD LOOPS)
   for (gylphIndex = 0; gylphIndex < s_currentFont->width; gylphIndex++)
   {
-    uint8_t readedVal = pgm_read_word (&s_currentFont->data[charFontStart + gylphIndex]);
-    underlyingDriver->SendData(&readedVal, 1);
+    //TODO: IMPLEMENT MULTI ARCH REMOVING AVR INTRINSICTS
+    uint8_t progMemByte = pgm_read_word (&s_currentFont->data[charFontStart + gylphIndex]);
+    underlyingDriver->SendData(&progMemByte, 1);
   }
 }
 

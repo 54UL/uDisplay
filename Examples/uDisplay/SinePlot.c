@@ -16,15 +16,15 @@
 #define WAVE_STEP 0.1
 
 // Buffer to hold sine wave data
-uint8_t waveBuffer[SCREEN_WIDTH];
+uint8_t waveBuffer[UD_SCREEN_WIDTH];
 
 // Function to generate sine wave data
 void generateWaveData() 
 {
-  for (int x = 0; x < SCREEN_WIDTH; x++) 
+  for (int x = 0; x < UD_SCREEN_WIDTH; x++) 
   {
     double y = WAVE_AMPLITUDE * sin((2 * M_PI * x) / WAVE_PERIOD);
-    waveBuffer[x] = (uint8_t) round(y + SCREEN_HEIGHT / 2);
+    waveBuffer[x] = (uint8_t) round(y + UD_SCREEN_HEIGHT / 2);
   }
 }
 

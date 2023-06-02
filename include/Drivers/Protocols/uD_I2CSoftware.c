@@ -2,11 +2,10 @@
 #include <avr/io.h>
 #include "../../Helpers/uD_Delay.h"
 
-// Pin Definitions
-#define SDA_PIN PB0
-#define SCL_PIN PB2
+#define UD_I2C_SDA_PIN PB0
+#define UD_I2C_SCL_PIN PB2
 
-// Global Variables
+// Global Variables (FIX THIS)
 static uint8_t current_i2c_address;
 uint8_t serial_buff_oled;
 uint16_t timeout;
@@ -14,51 +13,51 @@ uint16_t timeout;
 void sfw_i2c_init(uint8_t address)
 {
     current_i2c_address = address;
-    DDRB  |= (1 << SCL_PIN) | (1 << SDA_PIN);
-    PORTB |= (1 << SCL_PIN) | (1 << SDA_PIN);
+    DDRB  |= (1 << UD_I2C_SCL_PIN) | (1 << UD_I2C_SDA_PIN);
+    PORTB |= (1 << UD_I2C_SCL_PIN) | (1 << UD_I2C_SDA_PIN);
 }
 
 void sfw_i2c_start() //ADDRESS NOT USED !!!
 {    
-    PORTB |= (1 << SCL_PIN);
-    PORTB |= (1 << SDA_PIN);
+    PORTB |= (1 << UD_I2C_SCL_PIN);
+    PORTB |= (1 << UD_I2C_SDA_PIN);
     uD_delay_ms(1); // Add a delay of 1 ms
-    PORTB &= ~(1 << SDA_PIN);
+    PORTB &= ~(1 << UD_I2C_SDA_PIN);
 }
 
 void sfw_i2c_stop()
 {
-    PORTB &= ~(1 << SCL_PIN);
-    PORTB &= ~(1 << SDA_PIN);
+    PORTB &= ~(1 << UD_I2C_SCL_PIN);
+    PORTB &= ~(1 << UD_I2C_SDA_PIN);
     uD_delay_ms(1); // Add a delay of 1 ms
-    PORTB |= (1 << SCL_PIN);
-    PORTB |= (1 << SDA_PIN);
+    PORTB |= (1 << UD_I2C_SCL_PIN);
+    PORTB |= (1 << UD_I2C_SDA_PIN);
 }
 
 int sfw_i2c_check_ack()
 {
-    PORTB &= ~(1 << SCL_PIN);  // Ensure SCL is low
-    DDRB &= ~(1 << SDA_PIN);    // Set SDA as input to check for ACK
-    PORTB |= (1 << SCL_PIN);    // Generate clock pulse
-    int ack = !(PINB & (1 << SDA_PIN));  // Check if SDA is pulled low (ACK received)
-    PORTB &= ~(1 << SCL_PIN);    // Clear SCL
-    DDRB |= (1 << SDA_PIN);      // Set SDA as output again
+    PORTB &= ~(1 << UD_I2C_SCL_PIN);  // Ensure SCL is low
+    DDRB &= ~(1 << UD_I2C_SDA_PIN);    // Set SDA as input to check for ACK
+    PORTB |= (1 << UD_I2C_SCL_PIN);    // Generate clock pulse
+    int ack = !(PINB & (1 << UD_I2C_SDA_PIN));  // Check if SDA is pulled low (ACK received)
+    PORTB &= ~(1 << UD_I2C_SCL_PIN);    // Clear SCL
+    DDRB |= (1 << UD_I2C_SDA_PIN);      // Set SDA as output again
     return ack;
 }
 
 void sfw_i2c_write(uint8_t data)
 {
-    PORTB &= ~(1 << SCL_PIN); // Ensure SCL is low
+    PORTB &= ~(1 << UD_I2C_SCL_PIN); // Ensure SCL is low
     
     for (serial_buff_oled = 0; serial_buff_oled < 8; serial_buff_oled++)
     {
         if (data & (0x80 >> serial_buff_oled))
-            PORTB |= (1 << SDA_PIN);
+            PORTB |= (1 << UD_I2C_SDA_PIN);
         else
-            PORTB &= ~(1 << SDA_PIN);
+            PORTB &= ~(1 << UD_I2C_SDA_PIN);
         
-        PORTB |= (1 << SCL_PIN); // Generate clock pulse
-        PORTB &= ~(1 << SCL_PIN);
+        PORTB |= (1 << UD_I2C_SCL_PIN); // Generate clock pulse
+        PORTB &= ~(1 << UD_I2C_SCL_PIN);
     }
     
     // Check for ACK

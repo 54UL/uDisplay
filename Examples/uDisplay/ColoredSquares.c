@@ -21,7 +21,7 @@ void draw_square(uDisplay* display, uint8_t x, uint8_t y, uint32_t color) {
 void draw_random_squares(uDisplay* display) {
   for (int i = 0; i < 10; i++) {
     uint8_t x = rand() % (SCREEN_WIDTH - CUBE_SIZE);
-    uint8_t y = rand() % (SCREEN_HEIGHT - CUBE_SIZE);
+    uint8_t y = rand() % (UD_SCREEN_HEIGHT - CUBE_SIZE);
     uint32_t color = rand() % 0xFFFFFF; // 24-bit color
     draw_square(display, x, y, color);
   }
