@@ -1,9 +1,7 @@
 //MAIN PROJECT TEST CODE (START HERE...)
 
-//uDisplay config
+//uDisplay config (AVR)
 #define F_CPU 8000000UL
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
 
 #include <math.h>
 #include <avr/io.h>
@@ -19,7 +17,7 @@
 //Minimal code to initalize the library with software impl
 static inline void InitializeSystem()
 {
-   //Configures uDisplay renderer
+   //Configures uDisplay renderer in this order: protocol/display_driver/address
    uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver, 0x78};
 
    //Configures uDisplay rendering
@@ -35,10 +33,9 @@ static inline void FontRenderingTest()
    //This method draws an string at the current origin
    uDisplayRenderer.DrawString("uDisplay:");
    
-   //Renders all font characters
+   //Tries to render 96 characters only
    uint8_t charIndex = 32;
-   const uint8_t fontLenght = sizeof(uD_DefaultFont) / uD_DefaultFont.width;
-   for (; charIndex < fontLenght; charIndex++)
+   for (; charIndex < 96; charIndex++)
    {
       uDisplayRenderer.DrawChar(charIndex);
    }

@@ -13,6 +13,8 @@
         "ud_drivers.h": "c",
         "ud_engines.h": "c",
         "ud_i2csoftware.h": "c",
-        "ud_display.h": "c"
+        "ud_display.h": "c",
+        "math.h": "c",
+        "stdio.h": "c"
     }
 }

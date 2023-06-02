@@ -233,7 +233,7 @@ const uDFontDescriptor uD_DefaultFont =
 const uDFontDescriptor uD_DefaultFont =
 {
     .data = uD_DefaultFontRawData,
-    .dataLength = sizeof(uD_DefaultFontRawData),
+    .dataLenght = sizeof(uD_DefaultFontRawData),
     .width = 5,
     .height = 8
 };

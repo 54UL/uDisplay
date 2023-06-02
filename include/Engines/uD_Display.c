@@ -12,7 +12,7 @@ static uDFontDescriptor*    s_currentFont;
 void uDisplay_Initialize(uDRenderConfig *config)
 {
   underlyingDriver = config->driver;
-  config->protocol->Init(config->deviceId);
+  config->protocol->configure(config->deviceId);
   underlyingDriver->Init(config->protocol);
 }
 

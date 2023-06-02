@@ -36,8 +36,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 OLED_LOAD_DEFAULT_FONT : LOADS THE DEFAULT FONT GYLPHS IN PROGRAM MEMORY
 USE_I2C_SOFTWARE_IMPLEMENTATION
 USE_DELAY_SOFTWARE_IMPLEMENTATION: ENABLES THE USE OF SOFTWARE DELAY BY PROVIDING EXTRA INFO ABOUT THE INSTRUCTION CYCLE TIMES
-SDA_PIN : const int of the bit of sda 
-SCL_PIN: const int of the bit of sda
+UD_I2C_SDA_PIN : const int of the bit of sda 
+UD_I2C_SCL_PIN: const int of the bit of sda
 */
 
 /*
@@ -243,8 +243,8 @@ void I2C_MasterInit()
     TRISC4 = 1;
 #elif defined(__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     // SOFTWARE IMPLEMENTATION
-    SCL_PIN = 1;
-    SDA_PIN = 1;
+    UD_I2C_SCL_PIN = 1;
+    UD_I2C_SDA_PIN = 1;
 #endif
 }
 
@@ -253,9 +253,9 @@ void I2C_MasterWait()
 #if defined(__XC8) && !defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     while ((SSPSTAT & 0x04) || (SSPCON2 & 0x1F));
 #elif defined(__C51__ ) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
-    SCL_PIN = 1;
+    UD_I2C_SCL_PIN = 1;
     Timing_BlockingDelay_ms(1);
-    while (!SCL_PIN);
+    while (!UD_I2C_SCL_PIN);
 #endif
 }
 
@@ -266,10 +266,10 @@ void I2C_MasterStart()
     SEN = 1; //Initiate start condition
 #elif defined(__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
     // SOFTWARE IMPLEMENTATION
-    SCL_PIN = 1;
-    SDA_PIN = 1;
+    UD_I2C_SCL_PIN = 1;
+    UD_I2C_SDA_PIN = 1;
    Timing_BlockingDelay_ms(1);
-    SDA_PIN = 0;
+    UD_I2C_SDA_PIN = 0;
 #endif
 }
 
@@ -289,10 +289,10 @@ void I2C_MasterStop()
     I2C_MasterWait();
     PEN = 1;
 #elif defined(__C51__) || defined(USE_I2C_SOFTWARE_IMPLEMENTATION)
-    SCL_PIN = 0;
-    SDA_PIN = 0;
-    SCL_PIN = 1;
-    SDA_PIN = 1;
+    UD_I2C_SCL_PIN = 0;
+    UD_I2C_SDA_PIN = 0;
+    UD_I2C_SCL_PIN = 1;
+    UD_I2C_SDA_PIN = 1;
 #endif
 }
 
@@ -311,26 +311,26 @@ void I2C_MasterWrite(uint8_t d)
     timeout = 0;
     for (serial_buff_oled = 0; serial_buff_oled < 8; serial_buff_oled++)
     {
-        SCL_PIN = 0;
+        UD_I2C_SCL_PIN = 0;
         if (d & (0x80 >> serial_buff_oled))
-            SDA_PIN = 1;
+            UD_I2C_SDA_PIN = 1;
         else
-            SDA_PIN = 0;
-        SCL_PIN = 1;
+            UD_I2C_SDA_PIN = 0;
+        UD_I2C_SCL_PIN = 1;
     }
     //Aknowledge
-    SCL_PIN = 0;
-    SCL_PIN = 1;
+    UD_I2C_SCL_PIN = 0;
+    UD_I2C_SCL_PIN = 1;
     while (timeout < 254)
     {
-        if (!SCL_PIN)
-            while (SCL_PIN) //perame men estoy ocpado(bussy)
+        if (!UD_I2C_SCL_PIN)
+            while (UD_I2C_SCL_PIN) //perame men estoy ocpado(bussy)
 
-                if (!SDA_PIN)
+                if (!UD_I2C_SDA_PIN)
                     break;
         timeout++;
     }
-    if (SDA_PIN)
+    if (UD_I2C_SDA_PIN)
     {
         I2C_MasterStop(); //not ack
     }
