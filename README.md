@@ -39,7 +39,7 @@ static inline void FontRenderingTest()
   
   //Tries to render 96 characters (if implemented)
   uint8_t charIndex = 32;
-  for (; charIndex < 96 *5; charIndex++)
+  for (; charIndex < 96 * uD_DefaultFont.width; charIndex++)
   {
     uDisplayRenderer.DrawChar(charIndex);
   }
@@ -84,6 +84,7 @@ sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc avrdude
 | SSD1306           | I2C       | FUNCTIONAL   |
 | ST7789            | SPI       | TODO         |
 | ST7735R           | SPI       | TODO         |
+| ILI9341           | SPI       | TODO         |
 
 ## uDisplay MCU compatibility
 

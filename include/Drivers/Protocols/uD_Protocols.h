@@ -4,8 +4,8 @@
 #include "../../uD_Api.h"
 
 #include "uD_I2C.h"
-#include "uD_I2CSoftware.h"
-// #include "uD_SPI.h"
+#include "uD_I2C_Software.h"
+#include "uD_SPI_Software.h""
 
 uDisplayUnderlyingProtocol uDisplay_UnderlyingProtocol_I2C = {
     .configure = i2c_init,
@@ -19,6 +19,13 @@ uDisplayUnderlyingProtocol uDisplay_UnderlyingProtocol_I2C_Software = {
     .Init = sfw_i2c_start,
     .read = sfw_i2c_receive,
     .write = sfw_i2c_transfer,
+};
+
+uDisplayUnderlyingProtocol uDisplay_UnderlyingProtocol_SPI_Software = {
+    .configure = spi_init,
+    .Init = spi_start,
+    .read = spi_receive,
+    .write = spi_transfer
 };
 
 #endif
