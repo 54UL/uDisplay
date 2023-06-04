@@ -61,21 +61,21 @@ uint8_t sfw_spi_read(void)
 
 void sfw_spi_transfer(uint8_t cmd, uint8_t *data, uint8_t len)
 {
-    spi_start();
-    spi_write(cmd);
+    sfw_spi_start();
+    sfw_spi_write(cmd);
     for(uint8_t i = 0; i < len; i++)
     {
-        spi_write(data[i]);
+        sfw_spi_write(data[i]);
     }
-    spi_stop();
+    sfw_spi_stop();
 }
 
 void sfw_spi_receive(uint8_t *data, uint16_t len)
 {
-    spi_start();
+    sfw_spi_start();
     for(uint16_t i = 0; i < len; i++)
     {
-        data[i] = spi_read();
+        data[i] = sfw_spi_read();
     }
-    spi_stop();
+    sfw_spi_stop();
 }

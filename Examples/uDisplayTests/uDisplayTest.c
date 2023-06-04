@@ -15,7 +15,8 @@
 
 //TODO: ADD THIS FLAGS ON CMAKE
 // #define SSD1306_SFTW_TEST
-#define ST7789_SFTW_TEST
+// #define ST7789_SFTW_TEST
+#define ST7735_SFTW_TEST
 
 //Minimal code to initalize the library with software impl
 static inline void InitializeSystem()
@@ -25,6 +26,8 @@ static inline void InitializeSystem()
 #ifdef SSD1306_SFTW_TEST
    // I2C Software config, and 128x64 ssd1306 oled display at address 0x78
    uDRenderConfig config = { &uDisplay_UnderlyingProtocol_I2C_Software, &uDisplay_SSD1306Driver, 0x78};
+#elif defined(ST7735_SFTW_TEST)  
+   uDRenderConfig config = { &uDisplay_UnderlyingProtocol_SPI_Software, &uDisplay_st7735_driver, 0X00}; 
 #elif defined(ST7789_SFTW_TEST)  
    // SPI Software config, ST7789 and address is not used because spi protocol.
    uDRenderConfig config = { &uDisplay_UnderlyingProtocol_SPI_Software, &uDisplay_st7789_driver, 0X00}; 
@@ -58,7 +61,8 @@ static inline void FontRenderingTest()
 static inline void DrawPixelTest()
 {
    //Renders an string 
-   uDColor color = {uDPixelFormat::MONOCHROME, 0x1};
+   // uDColor color = {uDPixelFormat::MONOCHROME, 0x1};
+   uDColor color;
    uDisplayRenderer.DrawPixel(8, 8, &color);
 
    uDisplayRenderer.Clear();
