@@ -15,6 +15,8 @@
         "ud_i2csoftware.h": "c",
         "ud_display.h": "c",
         "math.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "ud_SPI.C": "cpp",
+        "ud_st7789_driver.h": "c"
     }
 }
